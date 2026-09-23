@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Malthus — Principle of Population</title>
+<meta name="description" content="Thomas Robert Malthus and the Principle of Population (1798), in the world that produced it. Build 1, History of Economic Thought.">
+<style>
+  :root{
+    --bg:#f7f4ee;
+    --ink:#1c1a17;
+    --muted:#5b544a;
+    --rule:#d8d0c2;
+    --card:#fffdf8;
+    --accent:#7a2e1d;      /* oxblood */
+    --accent-soft:#f0e2dc;
+    --link:#8a3418;
+    --geo:#7a2e1d;
+    --arith:#3a6b57;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#16140f; --ink:#ece7dd; --muted:#a79f90; --rule:#3a352c;
+      --card:#1e1b15; --accent:#d98266; --accent-soft:#2c211c;
+      --link:#e0906f; --geo:#d98266; --arith:#7bbf9f;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#16140f; --ink:#ece7dd; --muted:#a79f90; --rule:#3a352c;
+    --card:#1e1b15; --accent:#d98266; --accent-soft:#2c211c;
+    --link:#e0906f; --geo:#d98266; --arith:#7bbf9f;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    line-height:1.65; font-size:19px;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:0 20px}
+  header.masthead{padding:64px 0 40px; border-bottom:1px solid var(--rule)}
+  .kicker{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.14em; font-size:12.5px;
+    color:var(--accent); font-weight:700; margin:0 0 18px;
+  }
+  h1{font-size:40px; line-height:1.12; margin:0 0 10px; font-weight:700; letter-spacing:-0.01em}
+  .dates{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:14px; color:var(--muted); margin:0 0 22px}
+  .bigq{
+    font-style:italic; font-size:21px; color:var(--ink);
+    border-left:3px solid var(--accent); padding:4px 0 4px 18px; margin:22px 0 0;
+  }
+  .bigq span{display:block; font-style:normal; font-size:14px; color:var(--muted); margin-top:8px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  main{padding:8px 0 40px}
+  section{padding:38px 0; border-bottom:1px solid var(--rule)}
+  h2{
+    font-size:13px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.12em; color:var(--accent); font-weight:700;
+    margin:0 0 6px;
+  }
+  h3{font-size:26px; line-height:1.2; margin:0 0 16px; font-weight:700; letter-spacing:-0.01em}
+  p{margin:0 0 18px}
+  a{color:var(--link)}
+  strong{font-weight:700}
+  .lead{font-size:21px}
+  blockquote{
+    margin:26px 0; padding:20px 22px; background:var(--card);
+    border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:4px;
+    font-size:19px;
+  }
+  blockquote p{margin:0 0 8px}
+  blockquote cite{display:block; font-style:normal; font-size:13.5px; color:var(--muted);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .chart{background:var(--card); border:1px solid var(--rule); border-radius:8px; padding:20px 16px 12px; margin:24px 0}
+  .chart figcaption{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:13px; color:var(--muted); margin-top:10px; text-align:center}
+  .legend{display:flex; gap:20px; justify-content:center; margin-top:6px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:13px}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .swatch{width:14px; height:3px; border-radius:2px; display:inline-block}
+  .cards{display:grid; gap:14px; margin:22px 0}
+  @media(min-width:560px){.cards.two{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card); border:1px solid var(--rule); border-radius:8px; padding:18px 20px}
+  .card h4{margin:0 0 8px; font-size:18px}
+  .card p{margin:0; font-size:16.5px; color:var(--muted)}
+  .card p.body{color:var(--ink)}
+  ul.checks{list-style:none; padding:0; margin:18px 0}
+  ul.checks li{padding:14px 0; border-top:1px solid var(--rule)}
+  ul.checks li:last-child{border-bottom:1px solid var(--rule)}
+  ul.checks b{display:block; font-size:18px}
+  ul.checks span{font-size:16.5px; color:var(--muted)}
+  ol.timeline{list-style:none; padding:0; margin:18px 0; counter-reset:none}
+  ol.timeline li{display:grid; grid-template-columns:70px 1fr; gap:14px; padding:12px 0; border-top:1px solid var(--rule)}
+  ol.timeline li:last-child{border-bottom:1px solid var(--rule)}
+  ol.timeline .yr{font-weight:700; color:var(--accent);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:15px; padding-top:2px}
+  ol.timeline .ev{font-size:16.5px}
+  .verdict{background:var(--accent-soft); border:1px solid var(--rule); border-radius:8px; padding:22px 24px; margin:22px 0}
+  .verdict p{margin:0; font-size:18.5px}
+  footer{padding:40px 0 80px; color:var(--muted); font-size:14.5px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  footer a{color:var(--link)}
+  footer h2{margin-bottom:12px}
+  footer ul{margin:0; padding-left:20px}
+  footer li{margin:0 0 8px}
+  .backlink{display:inline-block; margin-top:14px}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">History of Economic Thought · Build 1</p>
+    <h1>Thomas Robert Malthus &amp; the Principle of Population</h1>
+    <p class="dates">1766–1834 · <em>An Essay on the Principle of Population</em>, first published 1798</p>
+    <p class="bigq">Does market exchange harmonize our interests, or conceal a conflict between them?
+      <span>The question we ask of every writer. Malthus's answer is the darkest one we will meet: the deepest conflict is not between classes or nations, but between human numbers and the earth that has to feed them — and no arrangement of society can talk it away.</span>
+    </p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <section>
+    <h2>The world that produced it</h2>
+    <h3>Why anyone wrote this in 1798</h3>
+    <p class="lead">Malthus wrote to win an argument he was losing at his own dinner table.</p>
+    <p>His father, Daniel Malthus, was an admirer of the radical optimists of the age — the Englishman <strong>William Godwin</strong> and the Frenchman <strong>the Marquis de Condorcet</strong>. In the wake of the French Revolution, both men argued that human society was <em>perfectible</em>: that reason, better institutions, and the end of private property would one day abolish poverty, war, and inequality, and set humanity on a path of endless improvement.</p>
+    <p>The younger Malthus — a Cambridge-trained mathematician and an ordained clergyman of the Church of England — thought this was a beautiful fantasy, and he set out to show <em>why</em> it could never happen. Not because people are too selfish or institutions too corrupt, but because of a fact of arithmetic he believed no reform could escape.</p>
+    <p>The timing mattered. England in the 1790s was crowded with the things that made the argument feel urgent: a population visibly growing, the <strong>enclosure</strong> of common land, the first stirrings of the Industrial Revolution, food shortages and high grain prices, and a system of <strong>Poor Laws</strong> that taxed parishes to give relief to the poor. To Malthus, that relief was not kindness — it was fuel on the fire.</p>
+    <ol class="timeline">
+      <li><span class="yr">1793</span><span class="ev">Godwin's <em>Enquiry Concerning Political Justice</em> argues society is perfectible.</span></li>
+      <li><span class="yr">1795</span><span class="ev">Condorcet's <em>Sketch</em> predicts indefinite human progress. The Speenhamland system begins topping up poor wages.</span></li>
+      <li><span class="yr">1798</span><span class="ev">Malthus answers, anonymously, with the <em>Essay on the Principle of Population</em>.</span></li>
+      <li><span class="yr">1803</span><span class="ev">A much larger 2nd edition, now under his name, adds a way out: "moral restraint."</span></li>
+      <li><span class="yr">1834</span><span class="ev">The New Poor Law is passed, shaped by Malthusian arguments. Malthus dies the same year.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>The argument in his own words</h2>
+    <h3>Two ratios that never meet</h3>
+    <p>Malthus starts from two things he treats as fixed facts about human beings: people must eat, and "the passion between the sexes" will continue roughly as it is. From these he draws the engine of the whole book.</p>
+    <blockquote>
+      <p>"Population, when unchecked, increases in a geometrical ratio. Subsistence increases only in an arithmetical ratio."</p>
+      <cite>— Malthus, <em>Essay on the Principle of Population</em> (1798), ch. 1</cite>
+    </blockquote>
+    <p>A <strong>geometric ratio</strong> multiplies: 1, 2, 4, 8, 16, 32… Population, left alone, doubles about every 25 years. An <strong>arithmetic ratio</strong> merely adds: 1, 2, 3, 4, 5… Food production, even improving steadily, can only be pushed up in slow, additive steps because land is limited. A multiplying line always, eventually, leaves an adding line far behind — no matter how you start them.</p>
+
+    <figure class="chart">
+      <svg viewBox="0 0 640 340" width="100%" height="auto" role="img" aria-label="A geometric population line pulling far above a nearly flat arithmetic food line over time.">
+        <!-- axes -->
+        <line x1="56" y1="20" x2="56" y2="290" stroke="var(--rule)" stroke-width="1.5"/>
+        <line x1="56" y1="290" x2="612" y2="290" stroke="var(--rule)" stroke-width="1.5"/>
+        <text x="16" y="160" fill="var(--muted)" font-family="sans-serif" font-size="13" transform="rotate(-90 16 160)">amount</text>
+        <text x="320" y="322" fill="var(--muted)" font-family="sans-serif" font-size="13" text-anchor="middle">generations (25 years each) →</text>
+        <!-- arithmetic line: 1..8 across, nearly flat scale -->
+        <polyline fill="none" stroke="var(--arith)" stroke-width="3"
+          points="56,278 135,270 214,262 293,254 372,246 451,238 530,230 609,222"/>
+        <!-- geometric curve: doubling -->
+        <polyline fill="none" stroke="var(--geo)" stroke-width="3"
+          points="56,286 135,283 214,278 293,268 372,248 451,208 530,128 609,28"/>
+        <circle cx="609" cy="28" r="4" fill="var(--geo)"/>
+        <circle cx="609" cy="222" r="4" fill="var(--arith)"/>
+        <text x="600" y="20" fill="var(--geo)" font-family="sans-serif" font-size="13" text-anchor="end">population</text>
+        <text x="600" y="240" fill="var(--arith)" font-family="sans-serif" font-size="13" text-anchor="end">food</text>
+      </svg>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--geo)"></i>Population (geometric)</span>
+        <span><i class="swatch" style="background:var(--arith)"></i>Food (arithmetic)</span>
+      </div>
+      <figcaption>The gap is the point. Whatever the head start, multiplication overtakes addition.</figcaption>
+    </figure>
+
+    <p>If population always tends to outrun food, then something must forever be holding it down to the level the food can support. Malthus calls these forces <strong>checks</strong>, and sorts them into two kinds.</p>
+    <ul class="checks">
+      <li><b>Positive checks — they raise the death rate.</b><span>Famine, disease, war, and the plain "misery" of the poor. These are nature's crude way of matching numbers to food, and they fall hardest on those at the bottom.</span></li>
+      <li><b>Preventive checks — they lower the birth rate.</b><span>In 1798 he lists mainly "vice." In the 1803 edition he adds <strong>moral restraint</strong> — delaying marriage until you can support a family — the one humane escape he allows, because it lowers births without misery or vice.</span></li>
+    </ul>
+    <blockquote>
+      <p>"The power of population is indefinitely greater than the power in the earth to produce subsistence for man."</p>
+      <cite>— Malthus, <em>Essay</em> (1798), ch. 1</cite>
+    </blockquote>
+
+    <h3 style="margin-top:34px">The trap, and the case against the Poor Laws</h3>
+    <p>Put the ratios and the checks together and you get what economic historians later called the <strong>Malthusian trap</strong>. Suppose wages rise. Families can afford more children, more survive, the population grows — and the extra mouths bid up the price of food and bid down wages until people are back at bare subsistence. Any gain for the mass of people is temporary; the population principle claws it back.</p>
+    <p>This is why Malthus opposed the English Poor Laws. Relief money, he argued, let poor families have more children than their own labor could feed. That raised the total population and the demand for food without raising the food supply, so it pushed up prices and spread the same fixed amount of bread more thinly — making the poor as a whole <em>worse</em> off while seeming to help them. It is a genuinely uncomfortable argument, and he meant it to be.</p>
+  </section>
+
+  <section>
+    <h2>Where he lands on the course question</h2>
+    <h3>Conflict, but not the kind you expected</h3>
+    <p>Adam Smith had offered a hopeful picture: individuals pursuing their own gain are led, "as if by an invisible hand," to outcomes that serve everyone. Godwin went further — perfect harmony was coming. Malthus stands against both, but from an angle all his own.</p>
+    <p>For Malthus the fundamental conflict is not employer against worker, or nation against nation. It is <strong>humanity against the soil</strong> — the multiplying drive of population against the stubborn limits of the land. That conflict is written into nature, not into any political system, so no revolution, no redistribution, no perfect set of institutions can dissolve it. Rearrange society however you like; within two generations the population principle refills it with the same scarcity and the same misery.</p>
+    <div class="verdict">
+      <p>So Malthus's answer to the course question is bleak: markets don't so much harmonize our interests or hide a conflict between us as <strong>run up against a conflict none of us chose</strong> — between how fast we can breed and how fast the earth can feed. Progress, for the mass of people, is a door that keeps swinging shut.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The modern counterpart — and what gets lost</h2>
+    <h3>"Malthusian" today</h3>
+    <p>The word outlived the man. Today "Malthusian" is shorthand for any warning that growth will crash into a natural ceiling — Paul Ehrlich's <em>Population Bomb</em> (1968), the <em>Limits to Growth</em> report (1972), debates about carrying capacity, food, water, and climate. Economic historians also use the "Malthusian trap" precisely: for almost all of human history before about 1800, living standards really did hover near subsistence, exactly as Malthus described.</p>
+    <div class="cards two">
+      <div class="card">
+        <h4>What lines up</h4>
+        <p class="body">On the whole pre-industrial past, he was roughly right. Income gains were eaten by population; famine and disease really were the regulators. And the core math — a constant growth rate eventually overtakes a fixed additive one — is simply true.</p>
+      </div>
+      <div class="card">
+        <h4>What gets lost</h4>
+        <p class="body">He missed two things that broke the trap almost as he wrote: sustained <strong>technological growth</strong> in farming (food grew geometrically too), and the <strong>demographic transition</strong> — as people got richer, they chose to have <em>fewer</em> children, the opposite of his assumption.</p>
+      </div>
+    </div>
+    <p>There is a subtler loss too. Reduced to a slogan about overpopulation, Malthus stops being what he was: a clergyman working out how a good God could allow permanent human misery, and answering that scarcity is what goads mankind out of idleness into industry. The modern "doomer" caricature keeps the gloom and throws away the theology and the moral argument that gave it its shape.</p>
+  </section>
+
+  <section>
+    <h2>The strongest case for him</h2>
+    <h3>Before you decide he was just wrong</h3>
+    <p>It is easy, from 2026, to file Malthus under "famously mistaken" — we are eight billion people and better fed than ever. But the honest version of his argument is harder to dismiss than that.</p>
+    <p>For roughly the entire span of human history <em>up to his own lifetime</em>, Malthus was describing reality accurately: wages returned to subsistence, and population was checked by hunger and disease. He had no way to know that the one exception in all of history — sustained, compounding technological growth — was beginning in the mills a few miles from where he wrote. His mistake was not bad logic; it was standing at the single hinge point in history where his own law stopped applying. And the underlying warning — that a finite planet cannot support unlimited exponential growth forever — is exactly the argument environmental scientists still make today. To answer Malthus, you cannot just point and laugh at the population bomb that didn't go off; you have to explain <em>why</em> the escape happened, and whether it can last.</p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>Sources &amp; notes</h2>
+    <ul>
+      <li>Thomas Robert Malthus, <em>An Essay on the Principle of Population</em> (1798; 2nd ed. 1803). Quotations from chapter 1.</li>
+      <li>E.K. Hunt &amp; Mark Lautzenheiser, <em>History of Economic Thought: A Critical Perspective</em>, 3rd ed. — course textbook, on Malthus and the classical period.</li>
+      <li>Context on Godwin, Condorcet, the Poor Laws, enclosure, and the "Malthusian trap" in economic history (e.g. Gregory Clark, <em>A Farewell to Alms</em>).</li>
+    </ul>
+    <p style="margin-top:16px">Built by Grayson Petty for History of Economic Thought (Dr. Scott Cunningham), Build 1 — Malthus. Verify all quotations and dates against the primary text before relying on them for a graded quiz or exam.</p>
+    <a class="backlink" href="../">← Back to all builds</a>
+  </div>
+</footer>
+</body>
+</html>
