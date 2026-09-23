@@ -3,351 +3,385 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Escape the Malthusian Trap — a game</title>
-<meta name="description" content="Play Malthus's Principle of Population: pull the levers he argued about and watch living standards get eaten by population.">
+<title>The Malthus Bowl — 4th &amp; Famine</title>
+<meta name="description" content="A football / Call of Duty / chess mashup of Malthus's Principle of Population. March toward Prosperity while the population Trap blitzes you back to subsistence.">
 <style>
   :root{
-    --bg:#f7f4ee; --ink:#1c1a17; --muted:#5b544a; --rule:#d8d0c2;
-    --card:#fffdf8; --accent:#7a2e1d; --accent-soft:#f0e2dc; --link:#8a3418;
-    --pop:#7a2e1d; --food:#3a6b57; --sub:#b9862f; --good:#3a6b57; --bad:#a2412a;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#16140f; --ink:#ece7dd; --muted:#a79f90; --rule:#3a352c;
-      --card:#1e1b15; --accent:#d98266; --accent-soft:#2c211c; --link:#e0906f;
-      --pop:#d98266; --food:#7bbf9f; --sub:#d9b25e; --good:#7bbf9f; --bad:#e0906f;
-    }
+    --bg:#0c1014; --panel:#131a21; --panel2:#0f151b; --ink:#e9eef2; --muted:#8a97a4;
+    --rule:#233240; --field:#183b26; --field2:#1e4a30; --line:#3f6b4f;
+    --you:#4fd1ff; --trap:#ff5a52; --grain:#f4c542; --order:#5be08a; --gold:#ffd34d;
+    --accent:#4fd1ff; --lock:#4a5866;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.55}
-  .wrap{max-width:820px;margin:0 auto;padding:0 18px}
-  header{padding:40px 0 20px;border-bottom:1px solid var(--rule)}
-  .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--accent);font-weight:700;margin:0 0 12px}
-  h1{font-family:Georgia,serif;font-size:32px;line-height:1.15;margin:0 0 8px;letter-spacing:-0.01em}
-  .sub{color:var(--muted);font-size:16px;margin:0}
-  .sub a{color:var(--link)}
-  main{padding:24px 0 60px}
-  .panel{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:18px;margin:0 0 18px}
-  /* stats */
-  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  @media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}}
-  .stat{background:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:12px 14px}
-  .stat .lab{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
-  .stat .val{font-family:Georgia,serif;font-size:26px;line-height:1.1;margin-top:4px}
-  .stat .note{font-size:12px;color:var(--muted);margin-top:2px}
-  /* living standard bar */
-  .lsbar{margin-top:14px}
-  .lsbar .track{position:relative;height:24px;background:linear-gradient(90deg,var(--bad),#c9a24a,var(--good));border-radius:6px;overflow:hidden;border:1px solid var(--rule)}
-  .lsbar .sub-mark{position:absolute;top:-4px;bottom:-4px;left:62.5%;width:2px;background:var(--ink)}
-  .lsbar .sub-mark::after{content:"subsistence";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
-  .lsbar .fill{position:absolute;top:0;bottom:0;left:0;background:rgba(0,0,0,.18);border-right:2px solid var(--ink);transition:width .5s ease}
-  .lsbar .cap{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:16px}
-  /* chart */
-  canvas{width:100%;height:230px;display:block}
-  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
-  .legend span{display:inline-flex;align-items:center;gap:6px}
-  .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
-  .sw.dash{height:0;border-top:2px dashed var(--sub)}
-  /* controls */
-  h2.small{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin:0 0 12px}
-  .levers{display:grid;gap:10px}
-  @media(min-width:620px){.levers{grid-template-columns:repeat(3,1fr)}}
-  .lever{border:1px solid var(--rule);border-radius:8px;padding:12px;background:var(--bg);cursor:pointer;text-align:left;font:inherit;color:inherit;transition:.15s}
-  .lever:hover{border-color:var(--accent)}
-  .lever[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
-  .lever .t{font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:space-between}
-  .lever .badge{font-size:11px;font-weight:700;color:var(--muted)}
-  .lever[aria-pressed="true"] .badge{color:var(--accent)}
-  .lever .d{font-size:12.5px;color:var(--muted);margin-top:4px}
-  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-  button.act{font:inherit;font-weight:700;font-size:15px;padding:12px 20px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
-  button.act.ghost{background:transparent;color:var(--link)}
-  button.act:disabled{opacity:.45;cursor:not-allowed}
+  body{margin:0;background:radial-gradient(120% 80% at 50% -10%, #16202a 0%, var(--bg) 60%);
+    color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5;
+    min-height:100vh}
+  .wrap{max-width:900px;margin:0 auto;padding:0 16px}
+  header{padding:26px 0 14px}
+  .kick{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  h1{font-family:Georgia,serif;font-size:30px;margin:6px 0 2px;letter-spacing:-.01em}
+  h1 .b{color:var(--trap)}
+  .tag{color:var(--muted);font-size:14px;margin:0}
+  .tag a{color:var(--you);text-decoration:none}
+  /* scoreboard */
+  .scoreboard{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;
+    background:linear-gradient(180deg,#0a0f14,#05080b);border:1px solid var(--rule);border-radius:12px;
+    padding:12px 16px;margin:14px 0;box-shadow:inset 0 0 30px rgba(0,0,0,.5)}
+  .team{text-align:center}
+  .team .n{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .team .s{font-family:"DS-Digital",Menlo,monospace;font-size:40px;font-weight:800;line-height:1}
+  .team.you .s{color:var(--you);text-shadow:0 0 14px rgba(79,209,255,.4)}
+  .team.trap .s{color:var(--trap);text-shadow:0 0 14px rgba(255,90,82,.4)}
+  .mid{text-align:center;min-width:120px}
+  .mid .dd{font-family:Georgia,serif;font-size:19px;font-weight:700}
+  .mid .q{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+  /* field */
+  .field{position:relative;height:120px;border-radius:12px;overflow:hidden;margin:0 0 6px;
+    background:repeating-linear-gradient(90deg,var(--field) 0 9%,var(--field2) 9% 10%);
+    border:1px solid var(--rule)}
+  .ez{position:absolute;top:0;bottom:0;width:12%;display:flex;align-items:center;justify-content:center;
+    writing-mode:vertical-rl;text-orientation:mixed;font-weight:800;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:#fff;opacity:.92}
+  .ez.left{left:0;background:linear-gradient(90deg,#5a1512,#7a1c17)}
+  .ez.right{right:0;background:linear-gradient(90deg,#155c33,#0f7a3f)}
+  .sub{position:absolute;top:0;bottom:0;left:50%;width:2px;background:rgba(255,255,255,.75)}
+  .sub .lab{position:absolute;top:4px;left:6px;font-size:9px;color:#fff;opacity:.8;white-space:nowrap;letter-spacing:.05em}
+  .ball{position:absolute;top:50%;transform:translate(-50%,-50%);transition:left .6s cubic-bezier(.22,1,.36,1);
+    font-size:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6));z-index:3}
+  .ghost{position:absolute;top:50%;transform:translate(-50%,-50%);transition:left .5s;font-size:16px;opacity:.55;z-index:2}
+  .fieldnote{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:0 2px 14px;letter-spacing:.04em}
+  /* hud */
+  .hud{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+  @media(min-width:640px){.hud{grid-template-columns:repeat(4,1fr)}}
+  .chip{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px 12px}
+  .chip .l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .chip .v{font-family:Georgia,serif;font-size:22px;margin-top:2px}
+  .bar{height:7px;border-radius:5px;background:#2a2f36;overflow:hidden;margin-top:7px}
+  .bar > i{display:block;height:100%;border-radius:5px;transition:width .5s,background .3s}
+  /* preview */
+  .preview{background:linear-gradient(90deg,rgba(255,90,82,.14),transparent);border:1px solid var(--rule);
+    border-left:3px solid var(--trap);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:14px}
+  .preview b{color:var(--trap)}
+  .preview .chess{color:var(--muted);font-size:12.5px}
+  /* playbook */
+  h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:2px 0 10px;font-weight:700}
+  .book{display:grid;gap:10px;grid-template-columns:1fr}
+  @media(min-width:560px){.book{grid-template-columns:1fr 1fr}}
+  @media(min-width:820px){.book{grid-template-columns:1fr 1fr 1fr}}
+  .play{position:relative;text-align:left;background:var(--panel);border:1px solid var(--rule);border-radius:12px;
+    padding:13px 14px 12px;cursor:pointer;color:inherit;font:inherit;transition:.14s;overflow:hidden}
+  .play:hover:not(:disabled){border-color:var(--you);transform:translateY(-2px)}
+  .play:disabled{opacity:.42;cursor:not-allowed}
+  .play .top{display:flex;align-items:center;gap:9px}
+  .play .gl{font-size:22px;line-height:1}
+  .play .nm{font-weight:800;font-size:15px}
+  .play .cost{margin-left:auto;font-size:11px;color:var(--grain);font-weight:700;white-space:nowrap}
+  .play .eff{font-size:12px;color:var(--you);font-weight:700;margin-top:7px}
+  .play .mal{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+  .play .lockmsg{font-size:11px;color:var(--trap);font-weight:700;margin-top:6px}
+  .play.hail{background:linear-gradient(180deg,#20180a,var(--panel));border-color:#4a3a12}
+  .play.hail:hover:not(:disabled){border-color:var(--gold)}
+  .play.hail .nm{color:var(--gold)}
+  .actions{display:flex;gap:10px;margin:16px 0 4px;flex-wrap:wrap}
+  .btn{font:inherit;font-weight:800;font-size:14px;padding:11px 18px;border-radius:9px;border:1px solid var(--rule);
+    background:transparent;color:var(--muted);cursor:pointer}
+  .btn.p{border-color:var(--you);color:var(--you)}
   /* log */
-  .log{max-height:260px;overflow:auto}
-  .log .entry{padding:10px 0;border-top:1px solid var(--rule);font-size:14.5px}
-  .log .entry:first-child{border-top:0}
-  .log .gen{font-weight:700;color:var(--accent);font-family:Georgia,serif}
-  .log .verdict{background:var(--accent-soft);border-radius:8px;padding:12px 14px;margin-top:8px}
-  .how{font-size:14px;color:var(--muted)}
-  .how b{color:var(--ink)}
-  footer{padding:24px 0 60px;color:var(--muted);font-size:13px}
-  footer a{color:var(--link)}
+  .log{background:var(--panel2);border:1px solid var(--rule);border-radius:12px;padding:6px 14px;max-height:300px;overflow:auto;margin-top:8px}
+  .ent{padding:11px 0;border-top:1px solid var(--rule);font-size:14px}
+  .ent:first-child{border-top:0}
+  .ent .mv{font-family:Menlo,monospace;font-size:11.5px;color:var(--gold);letter-spacing:.02em}
+  .ent .fb{margin-top:3px}
+  .ent .cod{color:var(--trap)}
+  .ent .res{color:var(--muted);font-size:12.5px;margin-top:3px}
+  .ent .final{background:linear-gradient(90deg,rgba(79,209,255,.12),transparent);border-radius:8px;padding:12px;margin-top:6px;font-size:14.5px}
+  .ent .final.win{background:linear-gradient(90deg,rgba(91,224,138,.16),transparent)}
+  .ent .final.lose{background:linear-gradient(90deg,rgba(255,90,82,.16),transparent)}
+  /* map legend */
+  details.map{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:2px 16px;margin:18px 0}
+  details.map summary{cursor:pointer;font-weight:700;padding:12px 0;font-size:14px;color:var(--you)}
+  details.map table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+  details.map td{padding:7px 8px;border-top:1px solid var(--rule);vertical-align:top}
+  details.map td:first-child{white-space:nowrap;font-weight:700}
+  footer{padding:14px 0 60px;color:var(--muted);font-size:12.5px}
+  footer a{color:var(--you)}
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <p class="kicker">History of Economic Thought · Build 1 · playable</p>
-    <h1>Escape the Malthusian Trap</h1>
-    <p class="sub">You rule a pre-industrial society. Try to make your people richer — and watch Malthus's law fight you.
-      &nbsp;·&nbsp; <a href="../">Read the explainer →</a></p>
+    <p class="kick">History of Economic Thought · Build 1 · playable</p>
+    <h1>The Malthus <span class="b">Bowl</span> — <span style="font-size:22px;color:var(--muted)">4th &amp; Famine</span></h1>
+    <p class="tag">🏈 × 🎮 × ♟️ &nbsp;March your people toward Prosperity while the Population Trap blitzes you back. &nbsp;·&nbsp; <a href="../">Read the explainer →</a></p>
   </div>
 </header>
 
-<main>
-<div class="wrap">
+<main class="wrap">
 
-  <!-- STATUS -->
-  <div class="panel">
-    <div class="stats">
-      <div class="stat"><div class="lab">Year</div><div class="val" id="year">1798</div><div class="note">Generation <span id="gen">0</span> of 8</div></div>
-      <div class="stat"><div class="lab">Population</div><div class="val" id="pop">100</div><div class="note" id="popNote">index</div></div>
-      <div class="stat"><div class="lab">Food supply</div><div class="val" id="food">100</div><div class="note" id="foodNote">index</div></div>
-      <div class="stat"><div class="lab">Living standard</div><div class="val" id="ls">100</div><div class="note" id="lsNote">at subsistence</div></div>
-    </div>
-    <div class="lsbar">
-      <div class="track"><div class="sub-mark"></div><div class="fill" id="lsfill" style="width:62.5%"></div></div>
-      <div class="cap"><span>famine</span><span>comfort</span></div>
-    </div>
+  <!-- SCOREBOARD -->
+  <div class="scoreboard">
+    <div class="team you"><div class="n">You · Living Std</div><div class="s" id="scoreYou">50</div></div>
+    <div class="mid"><div class="dd" id="down">1st &amp; Long</div><div class="q" id="qtr">Q1 · 1798</div></div>
+    <div class="team trap"><div class="n">The Trap · Pop.</div><div class="s" id="scoreTrap">100</div></div>
   </div>
 
-  <!-- CHART -->
-  <div class="panel">
-    <canvas id="chart" width="800" height="230"></canvas>
-    <div class="legend">
-      <span><i class="sw" style="background:var(--pop)"></i>Living standard</span>
-      <span><i class="sw" style="background:var(--food)"></i>Population</span>
-      <span><i class="sw dash"></i>Subsistence line</span>
-    </div>
+  <!-- FIELD -->
+  <div class="field" id="field">
+    <div class="ez left">Famine</div>
+    <div class="ez right">Prosperity</div>
+    <div class="sub"><span class="lab">SUBSISTENCE · 50</span></div>
+    <div class="ghost" id="ghost" style="left:50%">🛡️</div>
+    <div class="ball" id="ball" style="left:50%">🏈</div>
+  </div>
+  <div class="fieldnote"><span>◄ collapse</span><span id="yardTxt">on the 50-yard line — bare subsistence</span><span>break the trap ►</span></div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="chip"><div class="l">Living Standard</div><div class="v" id="ls">50</div></div>
+    <div class="chip"><div class="l">Population</div><div class="v" id="pop">100</div></div>
+    <div class="chip"><div class="l">🌾 Grain reserve</div><div class="v" id="grain">3</div></div>
+    <div class="chip"><div class="l">Social Order</div><div class="v" id="orderV">100</div><div class="bar"><i id="orderBar" style="width:100%;background:var(--order)"></i></div></div>
   </div>
 
-  <!-- CONTROLS -->
-  <div class="panel">
-    <h2 class="small">Your levers this generation</h2>
-    <div class="levers">
-      <button class="lever" id="lvAg" aria-pressed="false">
-        <div class="t">Push agriculture <span class="badge">off</span></div>
-        <div class="d">Break new land, drain fens. A one-time jump in food — but the earth only gives so much (diminishing returns).</div>
-      </button>
-      <button class="lever" id="lvRelief" aria-pressed="false">
-        <div class="t">Poor relief <span class="badge">off</span></div>
-        <div class="d">Feed the poor from parish taxes. Softens death today — but Malthus warns it lets families grow beyond what the land can feed.</div>
-      </button>
-      <button class="lever" id="lvRestraint" aria-pressed="false">
-        <div class="t">Moral restraint <span class="badge">off</span></div>
-        <div class="d">Encourage later marriage. Fewer births now — the one humane brake Malthus allowed in 1803.</div>
-      </button>
-    </div>
-    <div class="actions">
-      <button class="act" id="advance">Advance 25 years →</button>
-      <button class="act ghost" id="reset">Reset</button>
-    </div>
-    <p class="how" style="margin-top:14px">Living standard = food per person. <b>100 = bare subsistence.</b> Above it people prosper and multiply; below it, famine and disease (the "positive checks") thin them out. Your job: get living standard up and <b>keep it there</b>.</p>
+  <!-- PREVIEW -->
+  <div class="preview" id="preview">
+    <b>⚠ The Trap reads your offense.</b> Projected population blitz next down: <b id="pvYds">~3 yds</b>.
+    <div class="chess" id="pvChess">♟ Malthus is set to answer any advance with more mouths to feed. Plan two moves ahead.</div>
+  </div>
+
+  <!-- PLAYBOOK -->
+  <h2>Call your play — one per down</h2>
+  <div class="book" id="book"></div>
+
+  <div class="actions">
+    <button class="btn" id="reset">↺ New game</button>
   </div>
 
   <!-- LOG -->
-  <div class="panel">
-    <h2 class="small">What happened</h2>
-    <div class="log" id="log">
-      <div class="entry"><span class="gen">1798.</span> The year Malthus published. Your people sit exactly at subsistence. Pull a lever, then advance a generation.</div>
-    </div>
-  </div>
+  <div class="log" id="log"></div>
 
-</div>
+  <!-- MAP -->
+  <details class="map">
+    <summary>What each mechanic really means (say this in your breakout room)</summary>
+    <table>
+      <tr><td>The field</td><td>Your <b>living standard</b>. The 50-yard line is <b>subsistence</b> — the level Malthus says people always get dragged back to.</td></tr>
+      <tr><td>The blitz 🎮</td><td>The <b>positive check</b>: when you prosper, population multiplies and food-per-person falls. The better your field position, the harder the hit — that's the whole theory.</td></tr>
+      <tr><td>Ground &amp; Pound 🏈</td><td><b>Agriculture</b> grows food <em>arithmetically</em> — steady but with diminishing returns. Never enough to outrun population alone.</td></tr>
+      <tr><td>Clock Control ♟️</td><td><b>Moral restraint</b> (later marriage) — Malthus's one humane brake. Fewer births, so the blitz is weaker.</td></tr>
+      <tr><td>Relief Screen</td><td>The <b>Poor Laws</b>: saves people now, but swells the next population wave. Mercy today, deeper trap tomorrow — his most uncomfortable claim.</td></tr>
+      <tr><td>Hail Mary 🌟</td><td><b>The Industrial Revolution</b> — sustained technological growth, the one real escape, which Malthus (writing in 1798) never saw coming. Rare, risky, and only unlocks once you've held prosperity.</td></tr>
+    </table>
+  </details>
+
 </main>
 
-<footer>
-  <div class="wrap">
-    A learning model, not a literal history — it dramatizes the mechanism Malthus described in the <em>Essay on the Principle of Population</em> (1798).
-    &nbsp;·&nbsp; <a href="../">Malthus explainer</a> &nbsp;·&nbsp; <a href="../../">All builds</a>
-  </div>
+<footer class="wrap">
+  A learning model of Malthus's <em>Essay on the Principle of Population</em> (1798). The sports/shooter/chess dressing is a mnemonic, not history.
+  &nbsp;·&nbsp; <a href="../">Explainer</a> · <a href="../../">All builds</a>
 </footer>
 
 <script>
 (function(){
   "use strict";
-  var S, history;
-  var SUB = 100;           // subsistence living standard
-  var START_YEAR = 1798;
-  var MAX_GEN = 8;
+  var MAX = 8;                 // downs / generations
+  var START_YEAR = 1798, SUB = 50;
 
-  function fresh(){
-    return { gen:0, year:START_YEAR, pop:100, food:100, ls:100, agUses:0, over:false };
-  }
-  var levers = { ag:false, relief:false, restraint:false };
+  var PLAYS = [
+    { id:'ground', gl:'🏈', nm:'Ground & Pound', cost:1, klass:'',
+      eff:'+ food (diminishing)', mal:'Agriculture: arithmetic food growth. Reliable, but the land gives less each time.' },
+    { id:'clock', gl:'♟️', nm:'Clock Control', cost:0, klass:'',
+      eff:'small gain · –60% blitz', mal:'Moral restraint: fewer births, so the population wave hits softer. The disciplined play.' },
+    { id:'relief', gl:'🩹', nm:'Relief Screen', cost:1, klass:'',
+      eff:'no loss now · huge blitz next', mal:'Poor Laws: protects your people this down, but next wave surges. Malthus’s warning, in one play.' },
+    { id:'enclosure', gl:'⚔️', nm:'Enclosure Blitz', cost:0, klass:'',
+      eff:'+big yards · –social order', mal:'Enclosure: seize the commons for bigger farms. Fast yards, but unrest — order can collapse into revolt.' },
+    { id:'gambit', gl:'♞', nm:"Sacrifice Gambit", cost:0, klass:'',
+      eff:'spend population → yards', mal:'A grim positive check by choice: fewer mouths now buys food-per-person. Chess-style sacrifice.' },
+    { id:'hail', gl:'🌟', nm:'Innovation Hail Mary', cost:2, klass:'hail',
+      eff:'~45%: +25 & halve all blitzes', mal:'The Industrial Revolution — the only true escape, and Malthus never saw it coming. Unlocks after a 3-down prosperity streak.' }
+  ];
+
+  var S, pendingSurge, compounding, hailUnlocked, over;
 
   function reset(){
-    S = fresh();
-    history = [ {gen:0, ls:100, pop:100} ];
-    levers = { ag:false, relief:false, restraint:false };
-    document.getElementById('log').innerHTML =
-      '<div class="entry"><span class="gen">1798.</span> The year Malthus published. Your people sit exactly at subsistence. Pull a lever, then advance a generation.</div>';
-    syncLevers(); render();
-    document.getElementById('advance').disabled = false;
+    S = { yard:50, pop:100, grain:3, order:100, gen:0, streak:0, agUses:0 };
+    pendingSurge = 0; compounding = false; hailUnlocked = false; over = false;
+    document.getElementById('log').innerHTML = '';
+    add('Kickoff', '🏈 The Malthus Bowl is under way. You start on the 50 — dead-even at subsistence.',
+        '🎮 The Population Trap is on the far sideline, waiting for you to make a move.', '♟ Move 0. Board set.');
+    buildBook(); render();
   }
 
-  function setLever(key, btn){
-    if(S.over) return;
-    levers[key] = !levers[key];
-    btn.setAttribute('aria-pressed', levers[key] ? 'true':'false');
-    btn.querySelector('.badge').textContent = levers[key] ? 'ON' : 'off';
-  }
-  function syncLevers(){
-    [['ag','lvAg'],['relief','lvRelief'],['restraint','lvRestraint']].forEach(function(p){
-      var b=document.getElementById(p[1]);
-      b.setAttribute('aria-pressed', levers[p[0]]?'true':'false');
-      b.querySelector('.badge').textContent = levers[p[0]]?'ON':'off';
-    });
+  function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+  function projBlitz(){ // approx pushback if you advanced modestly
+    var y = S.yard + 6;
+    var pp = Math.max(0,(y-44))*0.55*(S.pop/100) + pendingSurge;
+    if(compounding) pp*=0.5;
+    return Math.round(pp);
   }
 
-  function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi,x)); }
+  function runPlay(id){
+    if(over) return;
+    var y0 = S.yard, surgeNow = pendingSurge; pendingSurge = 0;
+    var restraint=false, gain=0, note='';
 
-  function step(){
-    if(S.over) return;
-
-    // --- population responds to LAST generation's living standard ---
-    var surplus = (S.ls - SUB)/100;      // how far above/below subsistence
-    var g = surplus * 1.5;               // geometric response: prosperity -> more people
-    if(levers.restraint) g *= 0.45;      // fewer births
-    if(levers.relief){
-      if(g < 0) g *= 0.3;                // relief blunts the die-back (deaths suppressed)
-      g += 0.10;                         // and extra children survive
-    }
-    g = clamp(g, -0.15, 0.30);
-    var newPop = S.pop * (1 + g);
-
-    // --- food grows arithmetically (additive), never geometrically ---
-    var foodStep = 5;                    // steady, slow, additive
-    var agBump = 0;
-    if(levers.ag){
-      agBump = 16 * Math.pow(0.7, S.agUses);   // diminishing returns each use
+    if(id==='ground'){
+      var afford = S.grain>=1;
+      gain = Math.max(2, 8 - 2*S.agUses) * (afford?1:0.5);
+      if(afford) S.grain-=1;
       S.agUses++;
+      note = afford ? 'You break new fields.' : 'No grain to seed with — a weak harvest.';
     }
-    var newFood = S.food + foodStep + agBump;
+    else if(id==='clock'){ gain=3; restraint=true; note='Sermons on prudence; marriages delayed.'; }
+    else if(id==='relief'){ if(S.grain>=1)S.grain-=1; gain=5; pendingSurge=9; S.order=clamp(S.order+6,0,100); note='Parish grain feeds the hungry.'; }
+    else if(id==='enclosure'){ gain=12; S.order=clamp(S.order-18,0,100); S.grain+=1; note='Commons fenced, big estates formed — and anger rises.'; }
+    else if(id==='gambit'){ var sac=Math.round(S.pop*0.08); S.pop=Math.max(40,S.pop-sac); gain=7; note='You let a hard winter thin the rolls — '+sac+' fewer to feed.'; }
+    else if(id==='hail'){
+      S.grain=Math.max(0,S.grain-2);
+      if(Math.random()<0.45){ gain=25; compounding=true; note='IT CONNECTS. Steam, mills, iron — food and wealth start compounding.'; }
+      else { gain=0; S.order=clamp(S.order-10,0,100); note='Incomplete. The idea was a century early; a generation wasted.'; }
+    }
 
-    // --- results ---
-    S.pop = newPop;
-    S.food = newFood;
-    S.ls = (S.food / S.pop) * 100;
-    S.gen++; S.year += 25;
-    history.push({gen:S.gen, ls:S.ls, pop:S.pop});
+    var yAfter = clamp(y0 + gain, 0, 108);
 
-    narrate(g, agBump);
+    // population blitz (COD wave)
+    var pp = Math.max(0,(yAfter-44))*0.55*(S.pop/100) + surgeNow;
+    if(restraint) pp*=0.4;
+    if(compounding) pp*=0.5;
+    pp = Math.round(Math.max(0,pp));
 
-    // reset one-shot levers (ag is a one-time action); toggles persist
-    levers.ag = false;
-    syncLevers();
+    var yFinal = yAfter - pp;
+    if(id==='relief' && yFinal < y0) yFinal = y0;        // screen prevents a loss this down
+    yFinal = clamp(yFinal, 0, 108);
 
-    if(S.gen >= MAX_GEN){ endGame(); }
-    render();
+    // population responds to prosperity
+    var growth = (yAfter-50)*0.9; if(id==='relief') growth+=4;
+    S.pop = clamp(Math.round(S.pop*(1+growth/100)), 40, 400);
+
+    // social order
+    if(yFinal<45) S.order = clamp(S.order-(45-yFinal)*0.7,0,100);
+    else if(yFinal>55) S.order = clamp(S.order+3,0,100);
+    if(yFinal>55) S.grain+=1;
+
+    S.yard = yFinal;
+    S.streak = yFinal>50 ? S.streak+1 : 0;
+    if(S.streak>=3) hailUnlocked=true;
+    S.gen++;
+
+    narrate(id, gain, pp, note, restraint);
+
+    if(S.yard>=100){ finish('win'); }
+    else if(S.yard<=0){ finish('collapse'); }
+    else if(S.order<=0){ finish('revolt'); }
+    else if(S.gen>=MAX){ finish('trap'); }
+
+    buildBook(); render();
   }
 
-  function narrate(g, agBump){
-    var parts = [];
-    if(agBump > 0.5) parts.push('New fields brought food up sharply');
-    if(levers.relief) parts.push('relief kept the poor alive');
-    if(levers.restraint) parts.push('later marriages held births down');
-    var lead = parts.length ? (parts.join(', ') + '.') : 'You changed nothing.';
-
-    var fate;
-    if(S.ls >= 118) fate = 'For now, real comfort — but comfort invites more children.';
-    else if(S.ls >= 103) fate = 'A little breathing room above subsistence.';
-    else if(S.ls >= 97) fate = 'Right back at subsistence. The gains were eaten.';
-    else if(S.ls >= 85) fate = 'Below subsistence — hunger spreads, the positive checks begin.';
-    else fate = 'Famine and disease grip the land. This is the trap at its cruelest.';
-
-    var popPct = Math.round(g*100);
-    var popMove = popPct>0 ? ('Population rose '+popPct+'%') : (popPct<0 ? ('Population fell '+Math.abs(popPct)+'%'):'Population held steady');
-
-    add(S.year, lead + ' ' + popMove + '. Living standard '+Math.round(S.ls)+'. ' + fate);
+  function narrate(id,gain,pp,note,restraint){
+    var glyph = ({ground:'🏈',clock:'♟️',relief:'🩹',enclosure:'⚔️',gambit:'♞',hail:'🌟'})[id];
+    var name = PLAYS.filter(function(p){return p.id===id;})[0].nm;
+    var fb = '🏈 '+name+': '+note+' You gain <b>'+Math.round(gain)+'</b> yards.';
+    var cod = pp>0 ? ('🎮 THE TRAP BLITZES — population surges and drives you back <b>'+pp+'</b> yards.'
+                    + (restraint?' (Restraint blunted it.)':''))
+                   : '🎮 The Trap finds no opening this down.';
+    var res = 'Result: living standard '+Math.round(S.yard)+' · population '+Math.round(S.pop)
+            + ' · order '+Math.round(S.order)+(hailUnlocked&&!over?' · 🌟 Hail Mary unlocked':'');
+    var mv = '♟ Move '+S.gen+'. You: '+glyph+'  |  Malthus: population '+(pp>0?'advances':'holds');
+    add(yearLabel(), fb, cod, mv, res);
   }
 
-  function add(year, text, verdict){
+  function add(when, fb, cod, mv, res, finalHtml, finalClass){
     var log = document.getElementById('log');
-    var d = document.createElement('div');
-    d.className='entry';
-    d.innerHTML = '<span class="gen">'+year+'.</span> ' + text + (verdict? ('<div class="verdict">'+verdict+'</div>'):'');
+    var d = document.createElement('div'); d.className='ent';
+    var html = (mv?'<div class="mv">'+mv+'</div>':'')
+             + '<div class="fb">'+fb+'</div>'
+             + (cod?'<div class="fb cod">'+cod+'</div>':'')
+             + (res?'<div class="res">'+res+'</div>':'')
+             + (finalHtml?'<div class="final '+(finalClass||'')+'">'+finalHtml+'</div>':'');
+    // "when" prefix
+    d.innerHTML = '<div class="mv" style="color:var(--muted)">'+when+'</div>'+html;
     log.insertBefore(d, log.firstChild);
   }
 
-  function endGame(){
-    S.over = true;
-    document.getElementById('advance').disabled = true;
-    var v;
-    if(S.ls >= 108){
-      v = '<b>You beat the average — barely.</b> The only way to hold living standards above subsistence was to keep births in check while food crept up. That was Malthus’s own prescription (moral restraint), and notice how fragile it is. In the real world, the escape came from something Malthus never saw coming: the Industrial Revolution starting in the mills a few miles from where he wrote, making food and everything else grow <em>geometrically</em> too.';
-    } else if(S.ls >= 95){
-      v = '<b>Subsistence, again.</b> Two hundred years, and your people end roughly where they started — every gain in food was matched by an extra mouth. That is the Malthusian trap, and it held for almost all of human history until about 1800. The real exit wasn’t a lever you had: sustained technological growth.';
-    } else {
-      v = '<b>The trap closed on you.</b> Chances are you leaned on poor relief — it saved lives each generation but let population outrun the land, so misery became permanent. This is exactly why Malthus opposed the Poor Laws, however heartless that sounds. The tragedy in his system is that mercy today can mean more hunger tomorrow.';
-    }
-    add(S.year, 'The world of the <em>Essay</em> ends here.', v);
+  function finish(kind){
+    over = true;
+    var msg, cls;
+    if(kind==='win'){ cls='win';
+      msg='🏆 <b>TOUCHDOWN — you broke the Malthusian trap.</b> You only reached the end zone because the Innovation play hit: sustained technological growth, the Industrial Revolution. That is the single exception in all of history to the law Malthus described — and he had no way to see it coming from 1798. Notice how many things had to go right.'; }
+    else if(kind==='trap'){ cls='';
+      msg='🏈 <b>Final gun — stalemate at midfield.</b> Eight generations, and you end near where you started: subsistence. Every yard of prosperity called down a bigger population blitz that erased it. <b>This is the Malthusian trap</b>, and it was humanity’s final score for almost all of history before 1800.'; }
+    else if(kind==='revolt'){ cls='lose';
+      msg='💥 <b>Social order collapses — revolt.</b> You pushed too hard (enclosure, or misery left too long) and the people rose. Malthus feared exactly this instability; it is why he argued against both radical upheaval and, separately, against relief that he thought fed the crisis.'; }
+    else { cls='lose';
+      msg='☠️ <b>Collapse — driven into your own end zone.</b> Famine and disease, the positive checks, ran the score up. Most likely the Relief Screen kept population climbing past what the land could feed until the crash came. Grim, and exactly the mechanism Malthus warned about.'; }
+    add(yearLabel(), '🎮 GAME OVER.', '', '♟ Checkmate.', '', msg, cls);
+    render();
   }
 
-  // ---------- rendering ----------
+  function yearLabel(){ return (START_YEAR + S.gen*25) + ''; }
+
+  // ---- UI ----
+  function buildBook(){
+    var book = document.getElementById('book'); book.innerHTML='';
+    PLAYS.forEach(function(p){
+      var b=document.createElement('button'); b.className='play '+(p.klass||'');
+      var locked = (p.id==='hail' && !hailUnlocked);
+      var poor = (p.cost>0 && S.grain < p.cost && p.id!=='ground'); // ground allowed weak; others need grain
+      var dis = over || locked || poor;
+      b.disabled = dis;
+      var costTxt = p.cost>0 ? ('🌾 '+p.cost) : 'free';
+      b.innerHTML = '<div class="top"><span class="gl">'+p.gl+'</span><span class="nm">'+p.nm+'</span><span class="cost">'+costTxt+'</span></div>'
+        + '<div class="eff">'+p.eff+'</div>'
+        + '<div class="mal">'+p.mal+'</div>'
+        + (locked?'<div class="lockmsg">🔒 Hold above the 50 for 3 downs to unlock</div>':'')
+        + (poor&&!locked?'<div class="lockmsg">🔒 Not enough grain</div>':'');
+      if(!dis) b.addEventListener('click', function(){ runPlay(p.id); });
+      book.appendChild(b);
+    });
+  }
+
+  function ordinal(n){return ['1st','2nd','3rd','4th','5th','6th','7th','8th'][n]||((n+1)+'th');}
+
   function render(){
-    document.getElementById('year').textContent = S.year;
-    document.getElementById('gen').textContent = S.gen;
+    document.getElementById('scoreYou').textContent = Math.round(S.yard);
+    document.getElementById('scoreTrap').textContent = Math.round(S.pop);
+    document.getElementById('ls').textContent = Math.round(S.yard);
     document.getElementById('pop').textContent = Math.round(S.pop);
-    document.getElementById('food').textContent = Math.round(S.food);
-    document.getElementById('ls').textContent = Math.round(S.ls);
+    document.getElementById('grain').textContent = S.grain;
+    document.getElementById('orderV').textContent = Math.round(S.order);
+    var ob=document.getElementById('orderBar');
+    ob.style.width = S.order+'%';
+    ob.style.background = S.order>50?'var(--order)':(S.order>25?'var(--grain)':'var(--trap)');
 
-    var lsNote = document.getElementById('lsNote');
-    if(S.ls>=108){lsNote.textContent='above subsistence';lsNote.style.color='var(--good)';}
-    else if(S.ls>=95){lsNote.textContent='at subsistence';lsNote.style.color='var(--muted)';}
-    else {lsNote.textContent='misery — below subsistence';lsNote.style.color='var(--bad)';}
+    var downN = over ? 'Final' : (ordinal(S.gen)+' Down');
+    document.getElementById('down').innerHTML = over? 'FINAL' : (downN+' of '+MAX);
+    document.getElementById('qtr').textContent = 'Q'+Math.min(4,Math.floor(S.gen/2)+1)+' · '+yearLabel();
 
-    // fill: map ls 60..140 -> 0..100%, subsistence(100) at 62.5%? keep bar simple: 40..160 range
-    var pct = clamp((S.ls-40)/(160-40)*100, 2, 100);
-    document.getElementById('lsfill').style.width = pct + '%';
+    // ball position on field (0..100 -> 6%..94% to stay off end-zone labels a bit)
+    var pos = clamp(6 + (S.yard/108)*88, 3, 96);
+    document.getElementById('ball').style.left = pos+'%';
+    var pb = projBlitz();
+    var ghostPos = clamp(pos - (pb/108)*88, 2, 96);
+    document.getElementById('ghost').style.left = ghostPos+'%';
 
-    drawChart();
+    var yt = document.getElementById('yardTxt');
+    if(S.yard>=100) yt.textContent='IN THE END ZONE — prosperity!';
+    else if(S.yard>=66) yt.textContent='deep in prosperity territory';
+    else if(S.yard>=55) yt.textContent='above subsistence — for now';
+    else if(S.yard>=45) yt.textContent='pinned at the subsistence line';
+    else if(S.yard>=25) yt.textContent='backed up in misery';
+    else yt.textContent='on the brink of collapse';
+
+    document.getElementById('pvYds').textContent = over?'—':('~'+pb+' yds');
+    document.getElementById('pvChess').textContent = over
+      ? 'Game over — start a new game to play again.'
+      : (S.yard>60 ? '♟ You are exposed: the higher you climb, the harder Malthus answers. A restraint or gambit blunts the counter.'
+                   : '♟ Malthus is set to answer any advance with more mouths to feed. Plan two moves ahead.');
+    document.getElementById('preview').style.opacity = over?0.4:1;
   }
 
-  function drawChart(){
-    var cv = document.getElementById('chart');
-    var dpr = window.devicePixelRatio||1;
-    var W = cv.clientWidth, H = cv.clientHeight;
-    cv.width = W*dpr; cv.height = H*dpr;
-    var ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
-    ctx.clearRect(0,0,W,H);
-    var css = getComputedStyle(document.documentElement);
-    var col = function(n){return css.getPropertyValue(n).trim();};
-    var padL=36,padR=12,padT=14,padB=22;
-    var plotW=W-padL-padR, plotH=H-padT-padB;
-
-    // scales
-    var maxY = 200; // covers ls up to 160 and pop scaled
-    function X(i){ return padL + (MAX_GEN<=0?0:(i/MAX_GEN)*plotW); }
-    function Y(v){ return padT + plotH - (v/maxY)*plotH; }
-
-    // subsistence dashed line at 100
-    ctx.strokeStyle=col('--sub'); ctx.setLineDash([5,5]); ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(padL, Y(SUB)); ctx.lineTo(W-padR, Y(SUB)); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle=col('--muted'); ctx.font='11px sans-serif'; ctx.textAlign='right';
-    ctx.fillText('100', padL-6, Y(SUB)+4);
-    ctx.fillText('0', padL-6, Y(0)+4);
-
-    // population line (scaled: pop can grow large; cap display)
-    line(history.map(h=>Math.min(h.pop,200)), col('--food'));
-    // living standard line
-    line(history.map(h=>Math.min(h.ls,200)), col('--pop'));
-
-    function line(arr, color){
-      ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.beginPath();
-      arr.forEach(function(v,i){ var x=X(i),y=Y(v); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-      ctx.stroke();
-      // end dot
-      var i=arr.length-1; ctx.fillStyle=color; ctx.beginPath();
-      ctx.arc(X(i),Y(arr[i]),3.5,0,7); ctx.fill();
-    }
-    // x labels
-    ctx.fillStyle=col('--muted'); ctx.textAlign='center'; ctx.font='10px sans-serif';
-    ctx.fillText('1798', X(0), H-6);
-    ctx.fillText('gen '+S.gen, X(Math.max(1,S.gen)), H-6);
-  }
-
-  // wire up
-  document.getElementById('lvAg').addEventListener('click',function(){setLever('ag',this);});
-  document.getElementById('lvRelief').addEventListener('click',function(){setLever('relief',this);});
-  document.getElementById('lvRestraint').addEventListener('click',function(){setLever('restraint',this);});
-  document.getElementById('advance').addEventListener('click',step);
-  document.getElementById('reset').addEventListener('click',reset);
-  window.addEventListener('resize', drawChart);
-
+  document.getElementById('reset').addEventListener('click', reset);
   reset();
 })();
 </script>
