@@ -112,7 +112,7 @@
   <div class="wrap">
     <p class="kick">History of Economic Thought · Build 1 · playable</p>
     <h1>The Malthus <span class="b">Bowl</span> — <span style="font-size:22px;color:var(--muted)">4th &amp; Famine</span></h1>
-    <p class="tag">🏈 × 🎮 × ♟️ &nbsp;March your people toward Prosperity while the Population Trap blitzes you back. &nbsp;·&nbsp; <a href="../">Read the explainer →</a></p>
+    <p class="tag">🏈 × 🎮 × ♟️ &nbsp;Drive your workers' <b>wages</b> toward Prosperity — but every raise breeds more <b>population</b>, and the Trap blitzes wages back to subsistence. &nbsp;·&nbsp; <a href="../">Read the explainer →</a></p>
   </div>
 </header>
 
@@ -120,33 +120,33 @@
 
   <!-- SCOREBOARD -->
   <div class="scoreboard">
-    <div class="team you"><div class="n">You · Living Std</div><div class="s" id="scoreYou">50</div></div>
+    <div class="team you"><div class="n">You · Real wage</div><div class="s" id="scoreYou">50</div></div>
     <div class="mid"><div class="dd" id="down">1st &amp; Long</div><div class="q" id="qtr">Q1 · 1798</div></div>
-    <div class="team trap"><div class="n">The Trap · Pop.</div><div class="s" id="scoreTrap">100</div></div>
+    <div class="team trap"><div class="n">The Trap · Population</div><div class="s" id="scoreTrap">100</div></div>
   </div>
 
   <!-- FIELD -->
   <div class="field" id="field">
     <div class="ez left">Famine</div>
     <div class="ez right">Prosperity</div>
-    <div class="sub"><span class="lab">SUBSISTENCE · 50</span></div>
+    <div class="sub"><span class="lab">SUBSISTENCE WAGE · 50</span></div>
     <div class="ghost" id="ghost" style="left:50%">🛡️</div>
     <div class="ball" id="ball" style="left:50%">🏈</div>
   </div>
-  <div class="fieldnote"><span>◄ collapse</span><span id="yardTxt">on the 50-yard line — bare subsistence</span><span>break the trap ►</span></div>
+  <div class="fieldnote"><span>◄ wages collapse</span><span id="yardTxt">wages at the 50 — bare subsistence</span><span>wages break free ►</span></div>
 
   <!-- HUD -->
   <div class="hud">
-    <div class="chip"><div class="l">Living Standard</div><div class="v" id="ls">50</div></div>
-    <div class="chip"><div class="l">Population</div><div class="v" id="pop">100</div></div>
+    <div class="chip"><div class="l">💷 Real wage / worker</div><div class="v" id="ls">50</div><div class="note" style="font-size:11px;color:var(--muted);margin-top:2px">50 = subsistence</div></div>
+    <div class="chip"><div class="l">👥 Population</div><div class="v" id="pop">100</div><div class="note" id="popNote" style="font-size:11px;color:var(--muted);margin-top:2px">workers competing for pay</div></div>
     <div class="chip"><div class="l">🌾 Grain reserve</div><div class="v" id="grain">3</div></div>
     <div class="chip"><div class="l">Social Order</div><div class="v" id="orderV">100</div><div class="bar"><i id="orderBar" style="width:100%;background:var(--order)"></i></div></div>
   </div>
 
   <!-- PREVIEW -->
   <div class="preview" id="preview">
-    <b>⚠ The Trap reads your offense.</b> Projected population blitz next down: <b id="pvYds">~3 yds</b>.
-    <div class="chess" id="pvChess">♟ Malthus is set to answer any advance with more mouths to feed. Plan two moves ahead.</div>
+    <b>⚠ The Trap reads your offense.</b> Higher wages breed more workers — projected blitz on your wage next down: <b id="pvYds">~3 yds</b>.
+    <div class="chess" id="pvChess">♟ Every raise you win, Malthus answers with more mouths to feed and more workers to compete for the pay. Plan two moves ahead.</div>
   </div>
 
   <!-- PLAYBOOK -->
@@ -164,12 +164,14 @@
   <details class="map">
     <summary>What each mechanic really means (say this in your breakout room)</summary>
     <table>
-      <tr><td>The field</td><td>Your <b>living standard</b>. The 50-yard line is <b>subsistence</b> — the level Malthus says people always get dragged back to.</td></tr>
-      <tr><td>The blitz 🎮</td><td>The <b>positive check</b>: when you prosper, population multiplies and food-per-person falls. The better your field position, the harder the hit — that's the whole theory.</td></tr>
-      <tr><td>Ground &amp; Pound 🏈</td><td><b>Agriculture</b> grows food <em>arithmetically</em> — steady but with diminishing returns. Never enough to outrun population alone.</td></tr>
-      <tr><td>Clock Control ♟️</td><td><b>Moral restraint</b> (later marriage) — Malthus's one humane brake. Fewer births, so the blitz is weaker.</td></tr>
-      <tr><td>Relief Screen</td><td>The <b>Poor Laws</b>: saves people now, but swells the next population wave. Mercy today, deeper trap tomorrow — his most uncomfortable claim.</td></tr>
-      <tr><td>Hail Mary 🌟</td><td><b>The Industrial Revolution</b> — sustained technological growth, the one real escape, which Malthus (writing in 1798) never saw coming. Rare, risky, and only unlocks once you've held prosperity.</td></tr>
+      <tr><td>The field</td><td>The laborer's <b>real wage</b> (food per worker). The 50-yard line is the <b>subsistence wage</b> — the level Malthus says pay always gets dragged back to.</td></tr>
+      <tr><td>The Trap 👥</td><td><b>Population</b> — the workforce. The bigger it grows, the more workers compete for pay and the more mouths bid up food, so the wage falls.</td></tr>
+      <tr><td>The blitz 🎮</td><td>The <b>positive check</b> in action: a higher wage breeds more surviving children, population jumps, and those extra workers push the wage back down. The higher the wage, the harder the hit — that's the whole theory.</td></tr>
+      <tr><td>Iron law of wages</td><td>The loop that makes this a trap: <b>wages ↑ → population ↑ → wages ↓</b> back to subsistence. Pay is chained to the cost of staying alive, so no lasting raise for workers as a whole.</td></tr>
+      <tr><td>Ground &amp; Pound 🏈</td><td><b>Agriculture</b> grows food <em>arithmetically</em>, lifting the wage — but the extra food feeds a bigger population that eats the raise. Never enough to outrun population alone.</td></tr>
+      <tr><td>Clock Control ♟️</td><td><b>Moral restraint</b> (later marriage) — Malthus's one humane brake. Fewer births hold population down, so the wage can inch up.</td></tr>
+      <tr><td>Relief Screen</td><td>The <b>Poor Laws</b>: props up wages now, but the extra survivors swell the workforce, so next generation the wage is bid down harder. His most uncomfortable claim.</td></tr>
+      <tr><td>Hail Mary 🌟</td><td><b>The Industrial Revolution</b> — output finally grows faster than population, breaking the wage→population→wage link so pay can rise for good. The one real escape, which Malthus (1798) never saw coming.</td></tr>
     </table>
   </details>
 
@@ -188,17 +190,17 @@
 
   var PLAYS = [
     { id:'ground', gl:'🏈', nm:'Ground & Pound', cost:1, klass:'',
-      eff:'+ food (diminishing)', mal:'Agriculture: arithmetic food growth. Reliable, but the land gives less each time.' },
+      eff:'+ food → higher wage', mal:'Agriculture: arithmetic food growth lifts the wage. But more food feeds more births, so population soon eats the raise.' },
     { id:'clock', gl:'♟️', nm:'Clock Control', cost:0, klass:'',
-      eff:'small gain · –60% blitz', mal:'Moral restraint: fewer births, so the population wave hits softer. The disciplined play.' },
+      eff:'small raise · –60% blitz', mal:'Moral restraint: later marriage means fewer births, so population grows slowly and the wage-blitz hits softer.' },
     { id:'relief', gl:'🩹', nm:'Relief Screen', cost:1, klass:'',
-      eff:'no loss now · huge blitz next', mal:'Poor Laws: protects your people this down, but next wave surges. Malthus’s warning, in one play.' },
+      eff:'no wage loss now · huge blitz next', mal:'Poor Laws: props up wages today, but the extra survivors swell the workforce, so next generation the wage is bid down hard.' },
     { id:'enclosure', gl:'⚔️', nm:'Enclosure Blitz', cost:0, klass:'',
-      eff:'+14 yards · –social order', mal:'Enclosure: seize the commons for bigger farms. Fast yards, but unrest — order can collapse into revolt.' },
+      eff:'+14 wage · –social order', mal:'Enclosure: bigger farms, more food per worker, higher wage — but displaced laborers mean unrest, and population still chases the raise.' },
     { id:'gambit', gl:'♞', nm:"Sacrifice Gambit", cost:0, klass:'',
-      eff:'+8 yards · cut population', mal:'A grim positive check by choice: fewer mouths now buys food-per-person. Chess-style sacrifice.' },
+      eff:'cut population → wage up', mal:'A grim positive check by choice: fewer workers means each one earns more. Chess-style sacrifice of population to lift the wage.' },
     { id:'hail', gl:'🌟', nm:'Innovation Hail Mary', cost:1, klass:'hail',
-      eff:'~60%: +32 & break the pop-link', mal:'The Industrial Revolution — the only true escape, and Malthus never saw it coming. Unlocks after a 3-down prosperity streak.' }
+      eff:'~60%: +32 & break the pop→wage link', mal:'The Industrial Revolution — output grows so fast that population no longer drags the wage down. The one real escape, which Malthus never saw coming.' }
   ];
 
   var S, pendingSurge, compounding, hailUnlocked, over;
@@ -207,8 +209,8 @@
     S = { yard:50, pop:100, grain:3, order:100, gen:0, streak:0, agUses:0 };
     pendingSurge = 0; compounding = false; hailUnlocked = false; over = false;
     document.getElementById('log').innerHTML = '';
-    add('Kickoff', '🏈 The Malthus Bowl is under way. You start on the 50 — dead-even at subsistence.',
-        '🎮 The Population Trap is on the far sideline, waiting for you to make a move.', '♟ Move 0. Board set.');
+    add('Kickoff', '🏈 The Malthus Bowl is under way. The real wage starts on the 50 — exactly at subsistence, where a laborer just barely gets by.',
+        '🎮 The Population Trap waits on the far sideline: raise the wage and it answers with more workers to pull it back down.', '♟ Move 0. Board set.');
     buildBook(); render();
   }
 
@@ -271,7 +273,7 @@
     if(S.streak>=3) hailUnlocked=true;
     S.gen++;
 
-    narrate(id, gain, pp, note, restraint);
+    narrate(id, gain, pp, note, restraint, y0);
 
     if(S.yard>=100){ finish('win'); }
     else if(S.yard<=0){ finish('collapse'); }
@@ -281,16 +283,22 @@
     buildBook(); render();
   }
 
-  function narrate(id,gain,pp,note,restraint){
+  function narrate(id,gain,pp,note,restraint,y0){
     var glyph = ({ground:'🏈',clock:'♟️',relief:'🩹',enclosure:'⚔️',gambit:'♞',hail:'🌟'})[id];
     var name = PLAYS.filter(function(p){return p.id===id;})[0].nm;
-    var fb = '🏈 '+name+': '+note+' You gain <b>'+Math.round(gain)+'</b> yards.';
-    var cod = pp>0 ? ('🎮 THE TRAP BLITZES — population surges and drives you back <b>'+pp+'</b> yards.'
-                    + (restraint?' (Restraint blunted it.)':''))
-                   : '🎮 The Trap finds no opening this down.';
-    var res = 'Result: living standard '+Math.round(S.yard)+' · population '+Math.round(S.pop)
+    var popNow = Math.round(S.pop), wageNow = Math.round(S.yard);
+    var fb = '🏈 '+name+': '+note+' The move lifts the <b>wage +'+Math.round(gain)+'</b>.';
+    var cod;
+    if(pp>0){
+      cod = '🎮 THE TRAP BLITZES — the higher wage breeds more births; <b>population climbs to '+popNow+'</b>, and those extra workers compete the <b>wage back down '+pp+'</b>.'
+          + (restraint?' Restraint held births down, so the blitz was weak.':'')
+          + (compounding?' But industry now outgrows population, so it barely dents the wage.':'');
+    } else {
+      cod = '🎮 No blitz — population can\'t press the wage down this generation.';
+    }
+    var res = 'Result: real wage '+wageNow+' (50 = subsistence) · population '+popNow
             + ' · order '+Math.round(S.order)+(hailUnlocked&&!over?' · 🌟 Hail Mary unlocked':'');
-    var mv = '♟ Move '+S.gen+'. You: '+glyph+'  |  Malthus: population '+(pp>0?'advances':'holds');
+    var mv = '♟ Move '+S.gen+'. You: '+glyph+'  |  Malthus: '+(pp>0?'population advances, wage retreats':'population holds');
     add(yearLabel(), fb, cod, mv, res);
   }
 
@@ -311,13 +319,13 @@
     over = true;
     var msg, cls;
     if(kind==='win'){ cls='win';
-      msg='🏆 <b>TOUCHDOWN — you broke the Malthusian trap.</b> You only reached the end zone because the Innovation play hit: sustained technological growth, the Industrial Revolution. That is the single exception in all of history to the law Malthus described — and he had no way to see it coming from 1798. Notice how many things had to go right.'; }
+      msg='🏆 <b>TOUCHDOWN — you broke the wage–population link.</b> The wage finally rose and <em>stayed</em> risen, because the Innovation play hit: the Industrial Revolution let output grow faster than population, so extra workers no longer dragged pay back to subsistence. That is the single exception in all of history to Malthus’s law — and he had no way to see it coming from 1798.'; }
     else if(kind==='trap'){ cls='';
-      msg='🏈 <b>Final gun — stalemate at midfield.</b> Eight generations, and you end near where you started: subsistence. Every yard of prosperity called down a bigger population blitz that erased it. <b>This is the Malthusian trap</b>, and it was humanity’s final score for almost all of history before 1800.'; }
+      msg='🏈 <b>Final gun — the wage is right back at subsistence.</b> Eight generations, and the laborer earns no more than at kickoff. Every raise you won bred more workers (population ended at '+Math.round(S.pop)+') who competed the wage straight back down. <b>This is the Malthusian trap</b>, and it was humanity’s final score for almost all of history before 1800.'; }
     else if(kind==='revolt'){ cls='lose';
-      msg='💥 <b>Social order collapses — revolt.</b> You pushed too hard (enclosure, or misery left too long) and the people rose. Malthus feared exactly this instability; it is why he argued against both radical upheaval and, separately, against relief that he thought fed the crisis.'; }
+      msg='💥 <b>Social order collapses — revolt.</b> You pushed too hard (enclosure displaced workers, or misery ground on too long) and the people rose. Malthus feared exactly this instability from a swelling population with wages stuck at subsistence.'; }
     else { cls='lose';
-      msg='☠️ <b>Collapse — driven into your own end zone.</b> Famine and disease, the positive checks, ran the score up. Most likely the Relief Screen kept population climbing past what the land could feed until the crash came. Grim, and exactly the mechanism Malthus warned about.'; }
+      msg='☠️ <b>Collapse — wages driven to famine.</b> Population outran the food and the positive checks — hunger, disease — ran the score up. Most likely the Relief Screen kept the workforce growing past what the land could feed until the crash came. Exactly the mechanism Malthus warned about.'; }
     add(yearLabel(), '🎮 GAME OVER.', '', '♟ Checkmate.', '', msg, cls);
     render();
   }
@@ -369,18 +377,18 @@
     document.getElementById('ghost').style.left = ghostPos+'%';
 
     var yt = document.getElementById('yardTxt');
-    if(S.yard>=100) yt.textContent='IN THE END ZONE — prosperity!';
-    else if(S.yard>=66) yt.textContent='deep in prosperity territory';
-    else if(S.yard>=55) yt.textContent='above subsistence — for now';
-    else if(S.yard>=45) yt.textContent='pinned at the subsistence line';
-    else if(S.yard>=25) yt.textContent='backed up in misery';
-    else yt.textContent='on the brink of collapse';
+    if(S.yard>=100) yt.textContent='wages break free — real prosperity!';
+    else if(S.yard>=66) yt.textContent='wages well above subsistence';
+    else if(S.yard>=55) yt.textContent='wages above subsistence — for now';
+    else if(S.yard>=45) yt.textContent='wages pinned at subsistence';
+    else if(S.yard>=25) yt.textContent='wages sunk into misery';
+    else yt.textContent='wages at famine level';
 
     document.getElementById('pvYds').textContent = over?'—':('~'+pb+' yds');
     document.getElementById('pvChess').textContent = over
       ? 'Game over — start a new game to play again.'
-      : (S.yard>60 ? '♟ You are exposed: the higher you climb, the harder Malthus answers. A restraint or gambit blunts the counter.'
-                   : '♟ Malthus is set to answer any advance with more mouths to feed. Plan two moves ahead.');
+      : (S.yard>60 ? '♟ You are exposed: the higher the wage, the more births it breeds and the harder population answers. A restraint or gambit keeps population — and the counter — down.'
+                   : '♟ Every raise you win, Malthus answers with more workers competing the wage back to subsistence. Plan two moves ahead.');
     document.getElementById('preview').style.opacity = over?0.4:1;
   }
 
