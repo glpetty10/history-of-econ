@@ -194,11 +194,11 @@
     { id:'relief', gl:'🩹', nm:'Relief Screen', cost:1, klass:'',
       eff:'no loss now · huge blitz next', mal:'Poor Laws: protects your people this down, but next wave surges. Malthus’s warning, in one play.' },
     { id:'enclosure', gl:'⚔️', nm:'Enclosure Blitz', cost:0, klass:'',
-      eff:'+big yards · –social order', mal:'Enclosure: seize the commons for bigger farms. Fast yards, but unrest — order can collapse into revolt.' },
+      eff:'+14 yards · –social order', mal:'Enclosure: seize the commons for bigger farms. Fast yards, but unrest — order can collapse into revolt.' },
     { id:'gambit', gl:'♞', nm:"Sacrifice Gambit", cost:0, klass:'',
-      eff:'spend population → yards', mal:'A grim positive check by choice: fewer mouths now buys food-per-person. Chess-style sacrifice.' },
-    { id:'hail', gl:'🌟', nm:'Innovation Hail Mary', cost:2, klass:'hail',
-      eff:'~45%: +25 & halve all blitzes', mal:'The Industrial Revolution — the only true escape, and Malthus never saw it coming. Unlocks after a 3-down prosperity streak.' }
+      eff:'+8 yards · cut population', mal:'A grim positive check by choice: fewer mouths now buys food-per-person. Chess-style sacrifice.' },
+    { id:'hail', gl:'🌟', nm:'Innovation Hail Mary', cost:1, klass:'hail',
+      eff:'~60%: +32 & break the pop-link', mal:'The Industrial Revolution — the only true escape, and Malthus never saw it coming. Unlocks after a 3-down prosperity streak.' }
   ];
 
   var S, pendingSurge, compounding, hailUnlocked, over;
@@ -215,8 +215,8 @@
   function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
   function projBlitz(){ // approx pushback if you advanced modestly
     var y = S.yard + 6;
-    var pp = Math.max(0,(y-44))*0.55*(S.pop/100) + pendingSurge;
-    if(compounding) pp*=0.5;
+    var pp = compounding ? Math.max(0,(y-44))*0.10 + pendingSurge*0.5
+                         : Math.max(0,(y-44))*0.55*(S.pop/100) + pendingSurge;
     return Math.round(pp);
   }
 
@@ -234,20 +234,22 @@
     }
     else if(id==='clock'){ gain=3; restraint=true; note='Sermons on prudence; marriages delayed.'; }
     else if(id==='relief'){ if(S.grain>=1)S.grain-=1; gain=5; pendingSurge=9; S.order=clamp(S.order+6,0,100); note='Parish grain feeds the hungry.'; }
-    else if(id==='enclosure'){ gain=12; S.order=clamp(S.order-18,0,100); S.grain+=1; note='Commons fenced, big estates formed — and anger rises.'; }
-    else if(id==='gambit'){ var sac=Math.round(S.pop*0.08); S.pop=Math.max(40,S.pop-sac); gain=7; note='You let a hard winter thin the rolls — '+sac+' fewer to feed.'; }
+    else if(id==='enclosure'){ gain=14; S.order=clamp(S.order-18,0,100); S.grain+=1; note='Commons fenced, big estates formed — and anger rises.'; }
+    else if(id==='gambit'){ var sac=Math.round(S.pop*0.12); S.pop=Math.max(40,S.pop-sac); gain=8; note='You let a hard winter thin the rolls — '+sac+' fewer to feed.'; }
     else if(id==='hail'){
-      S.grain=Math.max(0,S.grain-2);
-      if(Math.random()<0.45){ gain=25; compounding=true; note='IT CONNECTS. Steam, mills, iron — food and wealth start compounding.'; }
-      else { gain=0; S.order=clamp(S.order-10,0,100); note='Incomplete. The idea was a century early; a generation wasted.'; }
+      S.grain=Math.max(0,S.grain-1);
+      if(Math.random()<0.60){ gain=32; compounding=true; note='IT CONNECTS. Steam, mills, iron — food and wealth start compounding, and population no longer sets the ceiling.'; }
+      else { gain=0; S.order=clamp(S.order-8,0,100); note='Incomplete. The idea was a century early; a generation wasted.'; }
     }
 
     var yAfter = clamp(y0 + gain, 0, 108);
 
-    // population blitz (COD wave)
-    var pp = Math.max(0,(yAfter-44))*0.55*(S.pop/100) + surgeNow;
+    // population blitz (COD wave). Once innovation compounds, industry outruns
+    // population, so the blitz stops scaling with the number of mouths.
+    var pp;
+    if(compounding){ pp = Math.max(0,(yAfter-44))*0.10 + surgeNow*0.5; }
+    else { pp = Math.max(0,(yAfter-44))*0.55*(S.pop/100) + surgeNow; }
     if(restraint) pp*=0.4;
-    if(compounding) pp*=0.5;
     pp = Math.round(Math.max(0,pp));
 
     var yFinal = yAfter - pp;
@@ -262,6 +264,7 @@
     if(yFinal<45) S.order = clamp(S.order-(45-yFinal)*0.7,0,100);
     else if(yFinal>55) S.order = clamp(S.order+3,0,100);
     if(yFinal>55) S.grain+=1;
+    if(compounding) S.grain+=1;   // industrial surplus keeps the offense fed
 
     S.yard = yFinal;
     S.streak = yFinal>50 ? S.streak+1 : 0;
