@@ -89,6 +89,10 @@
   .bcard .due{font-family:-apple-system,sans-serif;font-size:12.5px;color:var(--faint);margin-top:4px}
   .bcard .soon{font-family:-apple-system,sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
     color:var(--faint);border:1px solid var(--rule);border-radius:20px;padding:3px 9px;white-space:nowrap}
+  a.bcard{text-decoration:none;color:inherit;opacity:1;transition:transform .12s,border-color .12s}
+  a.bcard:hover{transform:translateY(-2px);border-color:var(--done)}
+  a.bcard .who{color:var(--ink)}
+  .soon.done{color:var(--done);border-color:var(--done)}
 
   footer{margin-top:44px;padding:24px 0 70px;border-top:1px solid var(--rule);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px;color:var(--faint);text-align:center;line-height:1.6}
@@ -103,10 +107,10 @@
     <p class="meta">
       <span>Six builds, one writer at a time</span>
       <span class="dot"></span>
-      <span class="progress" aria-label="1 of 6 builds complete">
-        <span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+      <span class="progress" aria-label="2 of 6 builds complete">
+        <span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
       </span>
-      <span>1 / 6</span>
+      <span>2 / 6</span>
     </p>
   </div>
 </header>
@@ -118,19 +122,23 @@
     <div class="feature">
       <div class="row1">
         <span class="badge"><span class="live-dot"></span>Live</span>
-        <span class="buildno">Build 1</span>
+        <span class="buildno">Build 2</span>
       </div>
-      <h2>Thomas Malthus &amp; the Principle of Population</h2>
-      <p class="writer-note">Why every rise in <strong>wages</strong> breeds a bigger <strong>population</strong> that drags pay back to subsistence — Malthus's trap, told two ways.</p>
+      <h2>David Ricardo &amp; the Division of the Spoils</h2>
+      <p class="writer-note"><strong>Comparative advantage</strong> harmonizes nations, while <strong>rent</strong> sets landlord against everyone at home — Ricardo's split answer, told two ways.</p>
       <div class="cta">
-        <a class="btn primary" href="malthus/game/">🏈 Play the game</a>
-        <a class="btn ghost" href="malthus/">Read the explainer →</a>
+        <a class="btn primary" href="ricardo/game/">⚓ Play the game</a>
+        <a class="btn ghost" href="ricardo/">Read the explainer →</a>
       </div>
+    </div>
+
+    <p class="section-label">Previous builds</p>
+    <div class="grid">
+      <a class="bcard done" href="malthus/"><div class="mono">1</div><div class="body"><div class="who">Thomas Malthus</div><div class="due">Build 1 · Principle of Population</div></div><span class="soon done">Done ✓</span></a>
     </div>
 
     <p class="section-label">Coming this semester</p>
     <div class="grid">
-      <div class="bcard"><div class="mono">2</div><div class="body"><div class="who">David Ricardo</div><div class="due">Build 2 · due Oct 8</div></div><span class="soon">Soon</span></div>
       <div class="bcard"><div class="mono">3</div><div class="body"><div class="who">Bentham · Say · Senior</div><div class="due">Build 3 · due Oct 22</div></div><span class="soon">Soon</span></div>
       <div class="bcard"><div class="mono">4</div><div class="body"><div class="who">Bastiat · Mill</div><div class="due">Build 4 · due Nov 12</div></div><span class="soon">Soon</span></div>
       <div class="bcard"><div class="mono">5</div><div class="body"><div class="who">Karl Marx</div><div class="due">Build 5 · due Nov 19</div></div><span class="soon">Soon</span></div>

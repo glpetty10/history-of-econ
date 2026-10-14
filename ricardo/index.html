@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ricardo — Comparative Advantage, Rent &amp; Distribution</title>
+<meta name="description" content="David Ricardo: comparative advantage, the theory of rent, and the distribution of the national product among landlords, capitalists, and workers. Build 2, History of Economic Thought.">
+<style>
+  :root{
+    --bg:#f7f4ee;
+    --ink:#1c1a17;
+    --muted:#5b544a;
+    --rule:#d8d0c2;
+    --card:#fffdf8;
+    --accent:#1f4d3a;      /* deep green — Ricardo set */
+    --accent-soft:#e2ece6;
+    --link:#2b6b4f;
+    --a:#1f4d3a;           /* England / cloth */
+    --b:#8a5a1c;           /* Portugal / wine */
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1512; --ink:#e7ece8; --muted:#9aa89f; --rule:#2a3630;
+      --card:#151d18; --accent:#6bc79b; --accent-soft:#1a2621;
+      --link:#7bd1a4; --a:#6bc79b; --b:#d9a95e;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1512; --ink:#e7ece8; --muted:#9aa89f; --rule:#2a3630;
+    --card:#151d18; --accent:#6bc79b; --accent-soft:#1a2621;
+    --link:#7bd1a4; --a:#6bc79b; --b:#d9a95e;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    line-height:1.65; font-size:19px;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:0 20px}
+  header.masthead{padding:64px 0 40px; border-bottom:1px solid var(--rule)}
+  .kicker{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.14em; font-size:12.5px;
+    color:var(--accent); font-weight:700; margin:0 0 18px;
+  }
+  h1{font-size:40px; line-height:1.12; margin:0 0 10px; font-weight:700; letter-spacing:-0.01em}
+  .dates{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:14px; color:var(--muted); margin:0 0 22px}
+  .bigq{
+    font-style:italic; font-size:21px; color:var(--ink);
+    border-left:3px solid var(--accent); padding:4px 0 4px 18px; margin:22px 0 0;
+  }
+  .bigq span{display:block; font-style:normal; font-size:14px; color:var(--muted); margin-top:8px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  main{padding:8px 0 40px}
+  section{padding:38px 0; border-bottom:1px solid var(--rule)}
+  h2{
+    font-size:13px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.12em; color:var(--accent); font-weight:700;
+    margin:0 0 6px;
+  }
+  h3{font-size:26px; line-height:1.2; margin:0 0 16px; font-weight:700; letter-spacing:-0.01em}
+  p{margin:0 0 18px}
+  a{color:var(--link)}
+  strong{font-weight:700}
+  .lead{font-size:21px}
+  blockquote{
+    margin:26px 0; padding:20px 22px; background:var(--card);
+    border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:4px;
+    font-size:19px;
+  }
+  blockquote p{margin:0 0 8px}
+  blockquote cite{display:block; font-style:normal; font-size:13.5px; color:var(--muted);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .chart{background:var(--card); border:1px solid var(--rule); border-radius:8px; padding:20px 16px 12px; margin:24px 0}
+  .chart figcaption{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:13px; color:var(--muted); margin-top:10px; text-align:center}
+  .legend{display:flex; gap:20px; justify-content:center; margin-top:6px; flex-wrap:wrap;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:13px}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .swatch{width:14px; height:12px; border-radius:3px; display:inline-block}
+  /* comparative-advantage table */
+  .ctable{width:100%; border-collapse:collapse; margin:22px 0; font-size:16.5px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--card);
+    border:1px solid var(--rule); border-radius:8px; overflow:hidden}
+  .ctable th,.ctable td{padding:12px 14px; border-top:1px solid var(--rule); text-align:center}
+  .ctable thead th{background:var(--accent-soft); border-top:0; font-size:13px; letter-spacing:.04em}
+  .ctable td:first-child,.ctable th:first-child{text-align:left; font-weight:700}
+  .ctable .hi{color:var(--accent); font-weight:800}
+  .cards{display:grid; gap:14px; margin:22px 0}
+  @media(min-width:560px){.cards.two{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card); border:1px solid var(--rule); border-radius:8px; padding:18px 20px}
+  .card h4{margin:0 0 8px; font-size:18px}
+  .card p{margin:0; font-size:16.5px; color:var(--muted)}
+  .card p.body{color:var(--ink)}
+  ul.checks{list-style:none; padding:0; margin:18px 0}
+  ul.checks li{padding:14px 0; border-top:1px solid var(--rule)}
+  ul.checks li:last-child{border-bottom:1px solid var(--rule)}
+  ul.checks b{display:block; font-size:18px}
+  ul.checks span{font-size:16.5px; color:var(--muted)}
+  ol.timeline{list-style:none; padding:0; margin:18px 0}
+  ol.timeline li{display:grid; grid-template-columns:70px 1fr; gap:14px; padding:12px 0; border-top:1px solid var(--rule)}
+  ol.timeline li:last-child{border-bottom:1px solid var(--rule)}
+  ol.timeline .yr{font-weight:700; color:var(--accent);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:15px; padding-top:2px}
+  ol.timeline .ev{font-size:16.5px}
+  .verdict{background:var(--accent-soft); border:1px solid var(--rule); border-radius:8px; padding:22px 24px; margin:22px 0}
+  .verdict p{margin:0; font-size:18.5px}
+  footer{padding:40px 0 80px; color:var(--muted); font-size:14.5px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  footer a{color:var(--link)}
+  footer h2{margin-bottom:12px}
+  footer ul{margin:0; padding-left:20px}
+  footer li{margin:0 0 8px}
+  .backlink{display:inline-block; margin-top:14px}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">History of Economic Thought · Build 2</p>
+    <h1>David Ricardo &amp; the Division of the Spoils</h1>
+    <p class="dates">1772–1823 · <em>On the Principles of Political Economy and Taxation</em>, first published 1817</p>
+    <p class="bigq">Does market exchange harmonize our interests, or conceal a conflict between them?
+      <span>Ricardo is the first writer we meet who answers <strong>both at once</strong>. Between <em>nations</em>, his theory of <strong>comparative advantage</strong> finds a harmony so deep that even a country worse at making everything still gains from trade. But <em>inside</em> a nation, his theory of <strong>rent</strong> and <strong>distribution</strong> uncovers a standing conflict over how the harvest is split — one where the landlord's gain is everyone else's loss.</span>
+    </p>
+    <p style="margin:22px 0 0"><a href="game/" style="display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-weight:700;font-size:15px;padding:12px 22px;border-radius:8px">⚓ Play the game: The Ricardo Exchange →</a></p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <section>
+    <h2>The world that produced it</h2>
+    <h3>A stockbroker takes on the landlords</h3>
+    <p class="lead">Ricardo is the one great classical economist who got rich <em>first</em> and theorized later.</p>
+    <p>Born in London to a family of Sephardic Jewish stock-dealers, he went to work on the exchange at 14, made an enormous fortune trading government bonds — famously profiting on the news from Waterloo in 1815 — and retired young to the life of a country gentleman. He came to economics as an amateur, reportedly after picking up Adam Smith's <em>Wealth of Nations</em> on holiday, and he worked out his system in letters and pamphlets with his close friend and sparring partner <strong>Thomas Malthus</strong>, whom you met in Build 1.</p>
+    <p>The burning issue of his day was the <strong>Corn Laws</strong> — tariffs that kept cheap foreign grain out of Britain and so kept the price of "corn" (meaning grain generally) high. After the Napoleonic Wars, landlords wanted that protection to continue; manufacturers and workers wanted cheap bread. Ricardo threw himself into the fight on the side of <strong>free trade</strong>, and in doing so built the two ideas he is remembered for: a theory of <strong>rent</strong> that explained <em>why</em> the landlord's interest is opposed to everyone else's, and a theory of <strong>comparative advantage</strong> that proved Britain would be richer importing its grain and specializing in what it did best.</p>
+    <p>He even bought his way into Parliament, sitting as an MP from 1819 until his early death in 1823, and arguing these cases on the floor of the Commons. Where Smith wrote as a philosopher of the whole social order, Ricardo wrote as an <strong>engineer of abstractions</strong> — stripping the economy down to a few classes and a few hard rules, and following the logic wherever it led, even when it led somewhere grim.</p>
+    <ol class="timeline">
+      <li><span class="yr">1799</span><span class="ev">Ricardo reads Smith's <em>Wealth of Nations</em> and begins studying political economy.</span></li>
+      <li><span class="yr">1815</span><span class="ev">Britain passes a new <strong>Corn Law</strong>. Ricardo's <em>Essay on Profits</em> lays out the theory of rent and the case against it.</span></li>
+      <li><span class="yr">1817</span><span class="ev">The <em>Principles of Political Economy and Taxation</em> — comparative advantage, the labor theory of value, and distribution as the central problem.</span></li>
+      <li><span class="yr">1819</span><span class="ev">Ricardo enters Parliament and argues for free trade and sound money.</span></li>
+      <li><span class="yr">1823</span><span class="ev">Ricardo dies at 51. The Corn Laws he fought are not repealed until 1846.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>The big idea · international harmony</h2>
+    <h3>Comparative advantage: why the worse country still wins</h3>
+    <p>Here is Ricardo's most surprising and durable result. Smith had already argued that two parties should each specialize in what they do best and trade. The puzzle Ricardo cracked was harder: <strong>what if one country is better at making <em>everything</em>?</strong> Shouldn't it just make everything itself and trade with no one?</p>
+    <p>No — and the reason is the single most counter-intuitive idea in classical economics. What matters is not whether you are better in <em>absolute</em> terms, but what each good <em>costs you in the other good you could have made instead</em> — its <strong>opportunity cost</strong>. Trade according to that, and both sides gain.</p>
+    <p>Ricardo's own example uses England and Portugal, cloth and wine. Portugal can make both with less labor — it has the <strong>absolute advantage</strong> in each. Watch what happens anyway:</p>
+
+    <table class="ctable">
+      <thead>
+        <tr><th>Labor-hours to make 1 unit</th><th>Cloth</th><th>Wine</th><th>Cost of 1 cloth, in wine</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>England</td><td>100</td><td>120</td><td class="hi">0.83 wine</td></tr>
+        <tr><td>Portugal</td><td>90</td><td>80</td><td>1.13 wine</td></tr>
+      </tbody>
+    </table>
+
+    <p>Portugal is better at both (90 &lt; 100 cloth, 80 &lt; 120 wine). But look at the last column — the <strong>opportunity cost</strong>. To make one cloth, England gives up only 0.83 units of wine; Portugal gives up 1.13. So <strong>cloth is cheaper for England to make</strong>, even though England is slower at it, because England's wine is <em>so</em> much worse that not-making-wine barely costs it anything. The mirror holds for Portugal: giving up cloth to make wine costs it less than it costs England.</p>
+    <div class="verdict">
+      <p><strong>The rule:</strong> England should pour its labor into <strong>cloth</strong> (its comparative advantage), Portugal into <strong>wine</strong> (its comparative advantage), and the two should trade. The total of cloth-and-wine in the world goes <em>up</em>, and — at any exchange rate between the two countries' internal costs — <strong>both countries end up with more of both goods</strong> than if each tried to make everything alone. The less productive country gains too. Nobody has to lose for trade to help.</p>
+    </div>
+    <p>This is pure harmony of interests — and it is the engine of the game attached to this build. There you play England, decide how to use your workers, and bargain a trade with Portugal; you will find you can only reach prosperity by doing the thing that feels wrong: making <em>no wine at all</em> and trusting the exchange.</p>
+
+    <figure class="chart">
+      <svg viewBox="0 0 640 260" width="100%" height="auto" role="img" aria-label="Bars showing total world output of cloth and wine rising after each country specializes and trades.">
+        <text x="20" y="22" fill="var(--muted)" font-family="sans-serif" font-size="13" font-weight="700">Total world output</text>
+        <!-- baseline -->
+        <line x1="60" y1="210" x2="610" y2="210" stroke="var(--rule)" stroke-width="1.5"/>
+        <!-- group 1: no trade -->
+        <text x="175" y="236" fill="var(--muted)" font-family="sans-serif" font-size="13" text-anchor="middle">Each country self-sufficient</text>
+        <rect x="120" y="120" width="52" height="90" rx="3" fill="var(--a)"/>
+        <rect x="182" y="110" width="52" height="100" rx="3" fill="var(--b)"/>
+        <text x="146" y="112" fill="var(--a)" font-family="sans-serif" font-size="12" text-anchor="middle">cloth</text>
+        <text x="208" y="102" fill="var(--b)" font-family="sans-serif" font-size="12" text-anchor="middle">wine</text>
+        <!-- group 2: specialize + trade -->
+        <text x="455" y="236" fill="var(--muted)" font-family="sans-serif" font-size="13" text-anchor="middle">Specialize &amp; trade</text>
+        <rect x="400" y="86" width="52" height="124" rx="3" fill="var(--a)"/>
+        <rect x="462" y="70" width="52" height="140" rx="3" fill="var(--b)"/>
+        <text x="426" y="78" fill="var(--a)" font-family="sans-serif" font-size="12" text-anchor="middle">cloth</text>
+        <text x="488" y="62" fill="var(--b)" font-family="sans-serif" font-size="12" text-anchor="middle">wine</text>
+        <!-- arrow -->
+        <path d="M300 150 q30 -30 86 -55" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 4"/>
+        <path d="M382 94 l6 2 l-5 5 z" fill="var(--muted)"/>
+      </svg>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--a)"></i>Cloth</span>
+        <span><i class="swatch" style="background:var(--b)"></i>Wine</span>
+      </div>
+      <figcaption>Same workers, same land — more of everything. The gains from trade come out of specialization, not out of anyone's pocket.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>The dark idea · conflict at home</h2>
+    <h3>Rent, and why the landlord is everyone's opponent</h3>
+    <p>If comparative advantage is Ricardo's sunny side, his theory of <strong>rent</strong> is his shadow. It is the idea that made him say something no polite economist of his day wanted to say out loud: that one whole class of society grows rich precisely by making everyone else poorer.</p>
+    <p>Start with a fact about land: it is not all equally good. Some fields are fertile, some are stony. When a country is small and its population low, only the best land is farmed, and food is cheap. But as <strong>population grows</strong> (here Ricardo borrows Malthus), more food is needed, so farmers are pushed onto <strong>worse and worse land</strong> — and onto the old land worked harder for smaller extra returns. This is <strong>diminishing returns</strong> in agriculture.</p>
+    <p>Now the twist. The price of grain has to be high enough to make it worth farming the <em>worst</em> land in use — the marginal land that barely pays. But that same high price is paid for grain grown on the <em>best</em> land, which produces far more for the same effort. The difference between what the good land yields and what the marginal land yields does not go to the farmer or the worker. It is skimmed off by the person who owns the good land, as <strong>rent</strong>.</p>
+    <blockquote>
+      <p>"Rent is that portion of the produce of the earth which is paid to the landlord for the use of the original and indestructible powers of the soil."</p>
+      <cite>— Ricardo, <em>Principles</em> (1817), ch. 2</cite>
+    </blockquote>
+    <p>So rent is not a cause of high grain prices — it is a <em>result</em> of them. And it grows relentlessly as population rises and worse land is tilled. Here is the chain that follows, and it is the heart of Ricardo's gloom:</p>
+    <ul class="checks">
+      <li><b>Population grows → worse land farmed → grain price rises.</b><span>Diminishing returns force society down the ladder of land quality to feed more people.</span></li>
+      <li><b>Rising grain price → rising rent.</b><span>The gap between the best land and the marginal land widens, and landlords pocket the whole difference, having done nothing.</span></li>
+      <li><b>Rising grain price → rising subsistence wage.</b><span>Bread costs more, so the wage that merely keeps a worker alive must rise too — but only to subsistence, never above (the "iron law" he shares with Malthus).</span></li>
+      <li><b>Higher rent + higher wages → the capitalist's profit is squeezed.</b><span>What's left for the person who actually invests and employs shrinks from both ends.</span></li>
+    </ul>
+    <p>This is why Ricardo makes the claim that defines his politics: the <strong>landlord's interest is permanently opposed to the interest of every other class</strong>. The worker lives at subsistence either way. The capitalist, whose profit drives all investment and growth, watches it drain away into rent. Only the landlord — contributing nothing but ownership of a fixed natural resource — gets steadily richer as the nation struggles.</p>
+  </section>
+
+  <section>
+    <h2>The system in one picture</h2>
+    <h3>Distribution is the whole game</h3>
+    <p>Smith had asked what makes a nation's wealth <em>grow</em>. Ricardo shifted the question to how the wealth is <strong>divided</strong>, and announced that this, not growth, was the real subject of the science.</p>
+    <blockquote>
+      <p>"To determine the laws which regulate this distribution is the principal problem in Political Economy."</p>
+      <cite>— Ricardo, <em>Principles</em> (1817), Preface</cite>
+    </blockquote>
+    <p>He pictured the whole national product — one great harvest — split three ways among three classes, each with its own law:</p>
+    <div class="cards two">
+      <div class="card">
+        <h4>🌾 Landlords → <em>rent</em></h4>
+        <p class="body">Receive the surplus of the good land over the marginal land. Their share <strong>rises</strong> automatically as population grows and farming spreads to poorer soil. They earn it by owning, not working.</p>
+      </div>
+      <div class="card">
+        <h4>👷 Workers → <em>wages</em></h4>
+        <p class="body">Receive the <strong>subsistence wage</strong> — just enough to live and reproduce. Fixed in real terms by the iron law of wages; it buys the same bread no matter how rich the nation gets.</p>
+      </div>
+      <div class="card">
+        <h4>🏭 Capitalists → <em>profit</em></h4>
+        <p class="body">Receive what is left after rent and wages. Because the first two tend to rise, profit is the <strong>residual that gets squeezed</strong> — and profit is the fund out of which all growth is financed.</p>
+      </div>
+      <div class="card">
+        <h4>⏳ The destination → the <em>stationary state</em></h4>
+        <p class="body">As rent climbs and profit falls toward zero, the capitalist has nothing left to reinvest. Accumulation halts, growth stops, and the economy freezes in a rich-landlord, poor-everyone-else equilibrium.</p>
+      </div>
+    </div>
+    <p>Notice how different this is from Malthus's single lever. Malthus had one conflict: numbers against the soil. Ricardo has a <strong>three-way tug-of-war</strong>, and he can show mathematically that over time the rope is pulled toward the landlord — which is exactly why repealing the Corn Laws mattered so much to him. Letting in cheap foreign grain would stop the march onto bad domestic land, hold down rent, hold down the subsistence wage, and <strong>keep profit alive</strong> so the economy could keep growing instead of ossifying.</p>
+    <p>Underneath all of this sits his <strong>labor theory of value</strong>: the exchange-value of a good is governed chiefly by the quantity of labor needed to produce it. Ricardo held this more rigorously than Smith, wrestled honestly with the awkward cases (goods that need lots of machinery or time), and never fully resolved them — but he handed the labor theory of value, nearly intact, to the writer who would turn it into dynamite: <strong>Karl Marx</strong>, who you meet in Build 5.</p>
+  </section>
+
+  <section>
+    <h2>Where he lands on the course question</h2>
+    <h3>Harmony abroad, conflict at home</h3>
+    <p>Ricardo's answer to our running question is a genuine split-screen, and that is what makes him pivotal.</p>
+    <p><strong>Between nations, markets harmonize.</strong> Comparative advantage is one of the strongest "invisible hand" results ever proven: let countries specialize and trade freely and <em>everyone</em> gains, even the country that is worse at everything. Here Ricardo out-Smiths Smith — the harmony is deeper and more surprising than Smith himself showed.</p>
+    <p><strong>Within a nation, markets conceal a conflict.</strong> The very same free-market logic, applied to land and population, produces the theory of rent — and rent is a zero-sum machine. What the landlord gains in rising rent, the capitalist loses in falling profit. The harmony of exchange sits on top of a structural war over the division of the product, and Ricardo was the first to put that war in equations.</p>
+    <div class="verdict">
+      <p>So Ricardo's answer is: <strong>both, and they are linked.</strong> Free exchange across borders really does harmonize interests — which is exactly why he fought the Corn Laws. But the distribution of what's produced at home hides a permanent conflict between landlords and everyone else. He is the hinge of the whole course: he hands the <em>harmony</em> of comparative advantage to every free-trader after him, and the <em>conflict</em> of the labor theory of value and class shares straight to Marx.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The modern counterpart — and what gets lost</h2>
+    <h3>"Ricardian" today</h3>
+    <p>Two centuries on, Ricardo may be the most alive of all the classical economists, because his signature result is still taught in week one of every trade course.</p>
+    <div class="cards two">
+      <div class="card">
+        <h4>What lines up</h4>
+        <p class="body"><strong>Comparative advantage</strong> is the foundation of modern trade theory and the intellectual backbone of globalization, the WTO, and every argument for free trade. The core insight — specialize by opportunity cost, not absolute skill — is simply, provably correct, and it applies to people as much as nations.</p>
+      </div>
+      <div class="card">
+        <h4>What gets lost</h4>
+        <p class="body">The model assumes labor can't move between countries, ignores the <strong>losers</strong> within a country when an industry collapses, and treats technology as fixed. "Everyone gains" is true for <em>nations as wholes</em> — not for the factory town whose plant moves overseas. Modern trade fights are mostly about that gap.</p>
+      </div>
+    </div>
+    <p>His theory of rent lives on too, generalized into the idea of <strong>economic rent</strong> — any income earned from owning a scarce, fixed resource rather than from producing anything. When economists today worry about landlords, monopolists, holders of patents, or owners of prime real estate capturing wealth they didn't create, they are speaking Ricardo's language. The gloomy <strong>stationary state</strong> is the one big call he got wrong, and for the same reason Malthus did: he could not foresee how far sustained technological progress would push back diminishing returns in farming.</p>
+  </section>
+
+  <section>
+    <h2>The strongest case for him</h2>
+    <h3>Before you file him under "abstract"</h3>
+    <p>Ricardo is sometimes dismissed as the man who made economics cold and mathematical — who replaced Smith's rich social world with a bloodless machine of three classes and a few equations. There is something to that. But it misses why the abstraction was a triumph.</p>
+    <p>Before Ricardo, economic arguments were mostly stories. Ricardo showed you could take a messy real fight — who should bear the cost of the Corn Laws — strip it to its logical skeleton, and <em>prove</em> a conclusion that no amount of storytelling could have reached: that protection enriched landlords at the direct expense of profits and growth, and that even a country superior at everything should still trade. Comparative advantage in particular is the kind of result that looks obvious only <em>after</em> someone has shown it to you, and before Ricardo, nobody had. Two hundred years of economists have tried to find the hole in it and failed. When a self-taught stockbroker reasons his way to a truth that survives two centuries of professional attack, "too abstract" is not the verdict — "this is what theory is <em>for</em>" is closer.</p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>Sources &amp; notes</h2>
+    <ul>
+      <li>David Ricardo, <em>On the Principles of Political Economy and Taxation</em> (1817; 3rd ed. 1821). Comparative advantage in ch. 7; rent in ch. 2; the distribution problem in the Preface.</li>
+      <li>David Ricardo, <em>An Essay on the Influence of a Low Price of Corn on the Profits of Stock</em> (1815) — the theory of rent and the case against the Corn Laws.</li>
+      <li>E.K. Hunt &amp; Mark Lautzenheiser, <em>History of Economic Thought: A Critical Perspective</em>, 3rd ed. — course textbook, on Ricardo and the classical period.</li>
+    </ul>
+    <p style="margin-top:16px">The England/Portugal cloth-and-wine figures (100/120, 90/80 labor-hours) are Ricardo's own illustrative numbers from <em>Principles</em> ch. 7. Built by Grayson Petty for History of Economic Thought (Dr. Scott Cunningham), Build 2 — Ricardo. Verify all quotations and dates against the primary text before relying on them for a graded quiz or exam.</p>
+    <a class="backlink" href="../">← Back to all builds</a>
+  </div>
+</footer>
+</body>
+</html>

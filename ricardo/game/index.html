@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ricardo Exchange — Cloth for Port</title>
+<meta name="description" content="A trade-negotiation strategy game of David Ricardo's comparative advantage. Play England, specialize, and bargain a deal with Portugal where BOTH nations win.">
+<style>
+  :root{
+    --bg:#0b1411; --panel:#122019; --panel2:#0d1813; --ink:#e8efe9; --muted:#8ba093;
+    --rule:#223a2d; --sea:#0e2a3a; --sea2:#113a4f;
+    --eng:#5be0a0; --por:#f0b24a; --gold:#ffd96b; --bad:#ff6b5a; --good:#5be0a0;
+    --accent:#5be0a0; --lock:#3a4e43;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(120% 80% at 50% -10%, #15261e 0%, var(--bg) 60%);
+    color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5;
+    min-height:100vh}
+  .wrap{max-width:940px;margin:0 auto;padding:0 16px}
+  header{padding:26px 0 12px}
+  .kick{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  h1{font-family:Georgia,serif;font-size:30px;margin:6px 0 2px;letter-spacing:-.01em}
+  h1 .b{color:var(--por)}
+  .tag{color:var(--muted);font-size:14px;margin:0;max-width:70ch}
+  .tag a{color:var(--eng);text-decoration:none}
+
+  /* goal bar */
+  .goals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 6px}
+  @media(min-width:640px){.goals{grid-template-columns:1fr 1fr 1fr}}
+  .goal{background:var(--panel);border:1px solid var(--rule);border-radius:11px;padding:11px 13px}
+  .goal .l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .goal .v{font-family:Georgia,serif;font-size:21px;margin-top:3px}
+  .goal.met{border-color:var(--good);box-shadow:0 0 0 1px var(--good) inset}
+  .goal.met .v{color:var(--good)}
+  .goal .sub{font-size:11px;color:var(--muted);margin-top:1px}
+
+  /* sea + ships */
+  .sea{position:relative;height:150px;border-radius:14px;overflow:hidden;margin:14px 0 6px;
+    background:linear-gradient(180deg,var(--sea2),var(--sea));border:1px solid var(--rule)}
+  .coast{position:absolute;top:0;bottom:0;width:20%;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:4px;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#fff}
+  .coast .flag{font-size:30px;line-height:1}
+  .coast.left{left:0;background:linear-gradient(90deg,rgba(91,224,160,.22),transparent)}
+  .coast.right{right:0;background:linear-gradient(270deg,rgba(240,178,74,.22),transparent)}
+  .coast small{font-weight:600;opacity:.8;font-size:10px;letter-spacing:.04em;text-transform:none}
+  .ship{position:absolute;top:44px;left:22%;font-size:30px;transition:left 1.1s cubic-bezier(.4,.1,.3,1);z-index:3;
+    filter:drop-shadow(0 3px 5px rgba(0,0,0,.5))}
+  .ship.back{top:92px;font-size:26px;transform:scaleX(-1)}
+  .cargo{position:absolute;top:18px;font-size:12px;color:#fff;background:rgba(0,0,0,.35);border-radius:20px;
+    padding:2px 9px;white-space:nowrap;transition:left 1.1s cubic-bezier(.4,.1,.3,1);z-index:4;opacity:0}
+  .cargo.show{opacity:1}
+  .wave{position:absolute;left:20%;right:20%;top:0;bottom:0;opacity:.14;
+    background:repeating-linear-gradient(90deg,transparent 0 16px,rgba(255,255,255,.5) 16px 17px)}
+
+  /* two nations */
+  .nations{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:720px){.nations{grid-template-columns:1fr 1fr}}
+  .nation{background:var(--panel);border:1px solid var(--rule);border-radius:13px;padding:15px 16px}
+  .nation.eng{border-top:3px solid var(--eng)}
+  .nation.por{border-top:3px solid var(--por)}
+  .nation h3{margin:0 0 2px;font-size:17px;font-family:Georgia,serif}
+  .nation .role{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .prod{display:flex;gap:16px;margin:12px 0 4px}
+  .prod .pp{flex:1}
+  .prod .pl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .prod .pv{font-family:Georgia,serif;font-size:24px;margin-top:1px}
+  .eng .pv.cloth{color:var(--eng)} .por .pv.wine{color:var(--por)}
+  .wrkrow{margin:10px 0 2px}
+  .wrkrow label{font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+  input[type=range]{width:100%;accent-color:var(--eng);margin:7px 0 0}
+  .por input[type=range]{accent-color:var(--por)}
+  .fixed{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.45}
+
+  /* welfare meters */
+  .welf{margin-top:12px}
+  .welf .wl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700}
+  .welf .num{font-family:Georgia,serif;font-size:18px;color:var(--ink)}
+  .meter{position:relative;height:12px;border-radius:7px;background:#1d2b23;margin-top:6px;overflow:hidden}
+  .meter > i{display:block;height:100%;border-radius:7px;transition:width .5s}
+  .eng .meter > i{background:var(--eng)} .por .meter > i{background:var(--por)}
+  .meter .base{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff;opacity:.85;z-index:2}
+  .meter .base::after{content:attr(data-l);position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+    font-size:9px;color:var(--muted);white-space:nowrap;font-weight:700}
+  .welf .hint{font-size:11.5px;color:var(--muted);margin-top:10px}
+  .welf .hint b{color:var(--good)} .welf .hint .lose{color:var(--bad)}
+
+  /* deal console */
+  .deal{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--rule);
+    border-radius:13px;padding:16px 16px 14px;margin:14px 0}
+  .deal h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:700}
+  .ctl{margin:12px 0}
+  .ctl label{font-size:13px;display:flex;justify-content:space-between;align-items:baseline}
+  .ctl label .big{font-family:Georgia,serif;font-size:19px;color:var(--ink)}
+  .ctl label .u{color:var(--muted);font-size:12px}
+  .terms{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:12px 0 4px;font-size:13px}
+  .terms .pill{background:#17241d;border:1px solid var(--rule);border-radius:20px;padding:5px 12px}
+  .terms .ratio{font-family:Georgia,serif;font-size:17px}
+  .band{position:relative;height:30px;margin:12px 0 2px;border-radius:7px;background:#16221b;border:1px solid var(--rule)}
+  .band .ok{position:absolute;top:0;bottom:0;background:rgba(91,224,160,.16);border-left:1px dashed var(--eng);border-right:1px dashed var(--por)}
+  .band .mk{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 10px var(--gold);z-index:3;transition:left .3s}
+  .band .cap{position:absolute;top:-16px;font-size:9.5px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+  .band .cap.l{color:var(--eng)} .band .cap.r{color:var(--por)}
+  .actions{display:flex;gap:10px;margin:14px 0 2px;flex-wrap:wrap}
+  .btn{font:inherit;font-weight:800;font-size:14px;padding:12px 20px;border-radius:10px;border:1px solid var(--rule);
+    background:transparent;color:var(--muted);cursor:pointer}
+  .btn.p{border-color:var(--eng);color:#07130d;background:var(--eng)}
+  .btn.p:hover{filter:brightness(1.08)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+
+  /* log */
+  .log{background:var(--panel2);border:1px solid var(--rule);border-radius:12px;padding:4px 14px;max-height:320px;overflow:auto;margin-top:12px}
+  .ent{padding:12px 0;border-top:1px solid var(--rule);font-size:14px}
+  .ent:first-child{border-top:0}
+  .ent .hd{font-family:Menlo,monospace;font-size:11.5px;color:var(--gold);letter-spacing:.02em}
+  .ent .por-say{color:var(--por);margin-top:4px}
+  .ent .res{color:var(--muted);font-size:12.5px;margin-top:4px}
+  .ent .final{border-radius:8px;padding:12px;margin-top:7px;font-size:14.5px}
+  .ent .final.win{background:linear-gradient(90deg,rgba(91,224,160,.16),transparent)}
+  .ent .final.no{background:linear-gradient(90deg,rgba(255,107,90,.14),transparent)}
+
+  details.map{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:2px 16px;margin:18px 0}
+  details.map summary{cursor:pointer;font-weight:700;padding:12px 0;font-size:14px;color:var(--eng)}
+  details.map table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+  details.map td{padding:7px 8px;border-top:1px solid var(--rule);vertical-align:top}
+  details.map td:first-child{white-space:nowrap;font-weight:700}
+  footer{padding:14px 0 60px;color:var(--muted);font-size:12.5px}
+  footer a{color:var(--eng)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <p class="kick">History of Economic Thought · Build 2 · playable</p>
+    <h1>The Ricardo <span class="b">Exchange</span> — <span style="font-size:22px;color:var(--muted)">Cloth for Port</span></h1>
+    <p class="tag">⚓ You are <b style="color:var(--eng)">England</b>. Portugal makes <em>everything</em> better than you — yet Ricardo says you can both get richer. Choose what to produce, then strike a trade where <b>both</b> nations beat going it alone. &nbsp;·&nbsp; <a href="../">Read the explainer →</a></p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- GOALS -->
+  <div class="goals">
+    <div class="goal" id="gGold"><div class="l">🎯 England's Golden Age</div><div class="v"><span id="engW">14.1</span> / 20.0</div><div class="sub">your welfare — reach 20 to win</div></div>
+    <div class="goal" id="gAut"><div class="l">⚓ Best you can do alone</div><div class="v">14.1</div><div class="sub">autarky ceiling — trade must beat it</div></div>
+    <div class="goal" id="gMutual"><div class="l">🤝 Mutual gains</div><div class="v" id="mutualV">—</div><div class="sub">Portugal wins too, or no deal</div></div>
+  </div>
+
+  <!-- SEA -->
+  <div class="sea">
+    <div class="coast left"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>England<small>good at cloth</small></div>
+    <div class="coast right"><span class="flag">🇵🇹</span>Portugal<small>good at wine</small></div>
+    <div class="wave"></div>
+    <div class="cargo" id="cargoOut">🧵 <span id="cargoOutT">cloth</span></div>
+    <div class="ship" id="shipOut">⛵</div>
+    <div class="cargo back" id="cargoIn">🍷 <span id="cargoInT">wine</span></div>
+    <div class="ship back" id="shipIn">⛵</div>
+  </div>
+
+  <!-- NATIONS -->
+  <div class="nations">
+    <div class="nation eng">
+      <div class="role">You · decide your economy</div>
+      <h3>🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</h3>
+      <div class="prod">
+        <div class="pp"><div class="pl">🧵 Cloth made</div><div class="pv cloth" id="engCloth">20</div></div>
+        <div class="pp"><div class="pl">🍷 Wine made</div><div class="pv" id="engWine">10</div></div>
+      </div>
+      <div class="wrkrow">
+        <label><span>Workers at the looms (cloth)</span><span id="loomLbl">5 / 10</span></label>
+        <input type="range" id="loom" min="0" max="10" step="1" value="5">
+        <div class="fixed">Each English worker makes <b>4 cloth</b> or <b>2 wine</b>. The rest of your 10 workers go to the vineyards.</div>
+      </div>
+      <div class="welf">
+        <div class="wl"><span>Welfare (needs both cloth &amp; wine)</span><span class="num" id="engWnum">14.1</span></div>
+        <div class="meter"><span class="base" data-l="alone: 14.1" style="left:47%"></span><i id="engMeter" style="width:47%"></i></div>
+        <div class="hint" id="engHint">Split evenly, you top out near 14.1 on your own. Can trade do better?</div>
+      </div>
+    </div>
+
+    <div class="nation por">
+      <div class="role">Trade partner · plays its own hand</div>
+      <h3>🇵🇹 Portugal</h3>
+      <div class="prod">
+        <div class="pp"><div class="pl">🧵 Cloth made</div><div class="pv" id="porCloth">0</div></div>
+        <div class="pp"><div class="pl">🍷 Wine made</div><div class="pv wine" id="porWine">90</div></div>
+      </div>
+      <div class="fixed" style="margin-top:14px">Each Portuguese worker makes <b>6 cloth</b> or <b>9 wine</b> — better than you at <em>both</em>. Portugal has read its Ricardo: it pours all 10 workers into <b>wine</b>, its comparative advantage, making <b>90 wine</b> and no cloth. It will only sign a deal that leaves it better off than farming for itself.</div>
+      <div class="welf">
+        <div class="wl"><span>Portugal's welfare</span><span class="num" id="porWnum">—</span></div>
+        <div class="meter"><span class="base" data-l="alone: 36.7" style="left:61%"></span><i id="porMeter" style="width:0%"></i></div>
+        <div class="hint" id="porHint">Alone, Portugal reaches 36.7. Your offer must leave it at least that well off.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEAL CONSOLE -->
+  <div class="deal">
+    <h2>⚖️ Strike a deal — send the ship</h2>
+    <div class="ctl">
+      <label><span>🧵 Cloth you ship to Portugal</span><span><span class="big" id="shipClothV">0</span> <span class="u">/ <span id="shipClothMax">20</span> made</span></span></label>
+      <input type="range" id="shipCloth" min="0" max="20" step="1" value="0">
+    </div>
+    <div class="ctl">
+      <label><span>🍷 Wine you ask for in return</span><span><span class="big" id="askWineV">0</span> <span class="u">/ 90 Portugal has</span></span></label>
+      <input type="range" id="askWine" min="0" max="90" step="1" value="0">
+    </div>
+
+    <div class="terms">
+      <span class="pill">Terms of trade: <span class="ratio" id="ratioV">—</span> <span style="color:var(--muted)">wine per cloth</span></span>
+      <span class="pill" id="bandState" style="color:var(--muted)">set a ratio to see if it can work</span>
+    </div>
+    <div class="band" id="band">
+      <div class="ok" id="bandOk" style="left:33%;right:0%"></div>
+      <div class="cap l" id="capL" style="left:33%">England won't trade below ½</div>
+      <div class="cap r" id="capR" style="left:100%">Portugal won't pay above 1½</div>
+      <div class="mk" id="bandMk" style="left:33%;display:none"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn p" id="send">⛵ Send the ship</button>
+      <button class="btn" id="reset">↺ New game</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="log" id="log"></div>
+
+  <!-- MAP -->
+  <details class="map">
+    <summary>What each piece really means (say this in your breakout room)</summary>
+    <table>
+      <tr><td>England &amp; Portugal</td><td>Ricardo's two countries. Portugal has the <b>absolute advantage</b> in both goods — it's simply more productive. The lesson is that this does <em>not</em> mean it should make everything.</td></tr>
+      <tr><td>Looms vs. vineyards</td><td>Your <b>opportunity cost</b>. England gives up little wine to make cloth (bad at wine anyway), so cloth is England's <b>comparative advantage</b>. Full specialization in cloth is the counter-intuitive winning move.</td></tr>
+      <tr><td>Welfare meter</td><td>You need <em>both</em> goods, so welfare rewards a balanced basket. Making 40 cloth and zero wine is useless — until you <b>trade</b> half of it for wine.</td></tr>
+      <tr><td>"Alone" baseline</td><td><b>Autarky</b> — self-sufficiency. The most England can reach making everything itself is ~14.1. Any welfare above that line is a pure <b>gain from trade</b>.</td></tr>
+      <tr><td>Terms of trade</td><td>The <b>price</b> in the deal (wine per cloth). It must sit between the two countries' home costs (½ and 1½). Inside that band, <b>both</b> nations gain; outside it, one side refuses. This is the harmony Ricardo proved.</td></tr>
+      <tr><td>Portugal's refusal</td><td>Portugal signs only if the deal beats its own autarky (36.7). So <b>every deal that gets signed makes both countries richer</b> — the gains from trade are real, not taken from anyone.</td></tr>
+      <tr><td>Where the gains go</td><td>Push the ratio toward 1½ and <em>you</em> capture most of the gain; toward ½ and Portugal does. The <b>split</b> of the gains is a negotiation — a small echo of Ricardo's bigger theme that distribution is where the conflict lives.</td></tr>
+    </table>
+  </details>
+
+</main>
+
+<footer class="wrap">
+  A learning model of Ricardo's <em>comparative advantage</em> (<em>Principles</em>, 1817, ch. 7). Productivity numbers are simplified for play, not Ricardo's exact labor-hours. The point is real: specialize by opportunity cost, trade inside the band, and both sides win.
+  &nbsp;·&nbsp; <a href="../">Explainer</a> · <a href="../../">All builds</a>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // --- model constants ---
+  var ENG_WORKERS=10, ENG_CLOTH_PP=4, ENG_WINE_PP=2;   // England per-worker output
+  var POR_WINE=90;                                      // Portugal specializes fully in wine
+  var POR_AUT=Math.sqrt(1350);                          // Portugal's best autarky welfare (30 cloth,45 wine)
+  var ENG_AUT=Math.sqrt(200);                           // England's best autarky welfare (20 cloth,10 wine)
+  var TARGET=20;                                         // England's Golden-Age welfare
+  // England home cost = 0.5 wine/cloth ; Portugal home cost = 1.5 wine/cloth
+  var LO=0.5, HI=1.5;
+
+  var loom, shipCloth, askWine, won=false;
+
+  function W(c,w){ return Math.sqrt(Math.max(0,c)*Math.max(0,w)); }
+  function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+
+  function engProd(){ return { cloth: loom*ENG_CLOTH_PP, wine: (ENG_WORKERS-loom)*ENG_WINE_PP }; }
+
+  // preview the outcome of the current sliders WITHOUT committing
+  function preview(){
+    var p=engProd();
+    var engC=p.cloth-shipCloth, engWn=p.wine+askWine;              // England after trade
+    var porC=shipCloth, porWn=POR_WINE-askWine;                    // Portugal after trade
+    return {
+      p:p,
+      engWelf:W(engC,engWn), porWelf:W(porC,porWn),
+      engC:engC, engWn:engWn, porC:porC, porWn:porWn,
+      ratio: shipCloth>0 ? askWine/shipCloth : null,
+      porAccepts: shipCloth>0 && (porC*porWn >= 1350 - 1e-9),
+      // most wine Portugal will give for this much cloth and stay >= autarky
+      porMaxWine: shipCloth>0 ? Math.max(0, POR_WINE - 1350/shipCloth) : 0
+    };
+  }
+
+  // --- rendering ---
+  function pct(w){ return clamp(w/30*100,0,100); }   // meters scaled so ~30 fills the bar
+
+  function render(){
+    var v=preview(), p=v.p;
+    document.getElementById('engCloth').textContent=p.cloth;
+    document.getElementById('engWine').textContent=p.wine;
+    document.getElementById('loomLbl').textContent=loom+' / 10';
+    document.getElementById('shipClothMax').textContent=p.cloth;
+
+    // clamp ship slider to produced cloth
+    var sc=document.getElementById('shipCloth');
+    sc.max=p.cloth;
+    if(shipCloth>p.cloth){ shipCloth=p.cloth; sc.value=shipCloth; }
+    document.getElementById('shipClothV').textContent=shipCloth;
+    document.getElementById('askWineV').textContent=askWine;
+
+    // England welfare meter (live preview if a trade is set, else own production)
+    var engShown = shipCloth>0 ? v.engWelf : W(p.cloth,p.wine);
+    document.getElementById('engWnum').textContent=engShown.toFixed(1);
+    document.getElementById('engW').textContent=engShown.toFixed(1);
+    document.getElementById('engMeter').style.width=pct(engShown)+'%';
+
+    // Portugal meter
+    if(shipCloth>0){
+      document.getElementById('porWnum').textContent=v.porWelf.toFixed(1);
+      document.getElementById('porMeter').style.width=pct(v.porWelf)+'%';
+    } else {
+      document.getElementById('porWnum').textContent='—';
+      document.getElementById('porMeter').style.width='0%';
+    }
+    document.getElementById('porCloth').textContent=shipCloth>0?shipCloth:0;
+    document.getElementById('porWine').textContent=POR_WINE-(shipCloth>0?askWine:0);
+
+    // terms of trade + band
+    var ratioEl=document.getElementById('ratioV'), stateEl=document.getElementById('bandState');
+    var mk=document.getElementById('bandMk');
+    if(v.ratio===null){
+      ratioEl.textContent='—'; mk.style.display='none';
+      stateEl.textContent='set a ratio to see if it can work'; stateEl.style.color='var(--muted)';
+    } else {
+      ratioEl.textContent=v.ratio.toFixed(2); mk.style.display='block';
+      // band spans ratio 0..2 across the bar; ok zone 0.5..1.5
+      var posPct=clamp(v.ratio/2*100,0,100);
+      mk.style.left=posPct+'%';
+      mk.style.background = (v.ratio>=LO && v.porAccepts) ? 'var(--gold)' : 'var(--bad)';
+      mk.style.boxShadow = (v.ratio>=LO && v.porAccepts) ? '0 0 10px var(--gold)' : '0 0 8px var(--bad)';
+      if(v.ratio<LO){ stateEl.textContent='⚠ Below ½ — you\'d do better making cloth yourself. Ask for more wine.'; stateEl.style.color='var(--bad)'; }
+      else if(!v.porAccepts){ stateEl.textContent='⚠ Portugal would refuse — this pushes it below going alone.'; stateEl.style.color='var(--bad)'; }
+      else { stateEl.textContent='✓ Inside the band — a deal both sides will sign.'; stateEl.style.color='var(--good)'; }
+    }
+
+    // England hint
+    var eh=document.getElementById('engHint');
+    if(shipCloth>0 && v.ratio!==null){
+      if(v.ratio<LO) eh.innerHTML='<span class="lose">You\'re giving cloth away too cheaply</span> — ask for more wine.';
+      else if(!v.porAccepts) eh.innerHTML='<span class="lose">Portugal will refuse these terms</span> — a welfare of '+engShown.toFixed(1)+' is only yours if it signs. Ease off.';
+      else if(engShown>=TARGET) eh.innerHTML='<b>Golden Age in reach — send the ship to lock it in.</b>';
+      else if(engShown>ENG_AUT) eh.innerHTML='Better than going alone (+'+(engShown-ENG_AUT).toFixed(1)+'). To hit 20, try specializing <b>fully</b> in cloth.';
+      else eh.innerHTML='<span class="lose">This trade leaves you worse than autarky.</span> Rethink the amounts.';
+    } else {
+      eh.innerHTML='Split evenly, you top out near 14.1 on your own. Can trade do better?';
+    }
+
+    // Portugal hint
+    var ph=document.getElementById('porHint');
+    if(shipCloth>0){
+      ph.innerHTML = v.porAccepts
+        ? 'Portugal gains too (+'+(v.porWelf-POR_AUT).toFixed(1)+' over going alone). It will sign.'
+        : 'For '+shipCloth+' cloth, Portugal will part with at most <b>'+Math.floor(v.porMaxWine)+' wine</b> and still beat autarky.';
+    } else {
+      ph.innerHTML='Alone, Portugal reaches 36.7. Your offer must leave it at least that well off.';
+    }
+
+    // goal chips
+    toggle('gGold', engShown>=TARGET && shipCloth>0 && v.porAccepts);
+    var mv=document.getElementById('mutualV');
+    if(shipCloth>0){
+      mv.textContent=v.porAccepts?'✓ yes':'✗ not yet';
+      toggle('gMutual', v.porAccepts);
+    } else { mv.textContent='—'; toggle('gMutual',false); }
+
+    document.getElementById('send').disabled = won || shipCloth===0;
+  }
+
+  function toggle(id,on){ document.getElementById(id).classList.toggle('met',!!on); }
+
+  // --- ship animation ---
+  function sailAnim(accepted, outT, inT){
+    var shipOut=document.getElementById('shipOut'), cargoOut=document.getElementById('cargoOut');
+    var shipIn=document.getElementById('shipIn'), cargoIn=document.getElementById('cargoIn');
+    document.getElementById('cargoOutT').textContent=outT;
+    document.getElementById('cargoInT').textContent=inT;
+    // reset
+    shipOut.style.left='22%'; cargoOut.style.left='22%'; cargoOut.classList.remove('show');
+    shipIn.style.left='78%'; cargoIn.style.left='78%'; cargoIn.classList.remove('show');
+    // out voyage
+    setTimeout(function(){ cargoOut.classList.add('show'); shipOut.style.left='78%'; cargoOut.style.left='78%'; },60);
+    if(accepted){
+      setTimeout(function(){ cargoIn.classList.add('show'); shipIn.style.left='22%'; cargoIn.style.left='22%'; },700);
+      setTimeout(function(){ cargoOut.classList.remove('show'); },1300);
+    } else {
+      // rejected: cloth ship turns back
+      setTimeout(function(){ shipOut.style.left='22%'; cargoOut.style.left='22%'; },900);
+    }
+  }
+
+  // --- resolve a committed deal ---
+  function send(){
+    if(won || shipCloth===0) return;
+    var v=preview();
+    var ratio=v.ratio;
+
+    if(ratio<LO){
+      sailAnim(false,shipCloth+' cloth','');
+      logEnt('Deal offered: '+shipCloth+' cloth for '+askWine+' wine ('+ratio.toFixed(2)+' wine/cloth)',
+        '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Your own merchants balk: "We make cloth cheaper than that at home — why ship it for so little wine?"',
+        'No deal. A ratio below ½ means England gives up cloth too cheaply — you\'d rather just make the wine yourself.', null);
+      return;
+    }
+    if(!v.porAccepts){
+      var maxW=Math.floor(v.porMaxWine);
+      sailAnim(false,shipCloth+' cloth','');
+      logEnt('Deal offered: '+shipCloth+' cloth for '+askWine+' wine ('+ratio.toFixed(2)+' wine/cloth)',
+        '🇵🇹 Portugal\'s envoy shakes his head: "For '+shipCloth+' of your cloth I\'ll give '+maxW+' wine at the most — not '+askWine+'. Beyond that I do better farming my own."',
+        'No deal. The terms pushed Portugal below its autarky — outside the band, trade collapses.', null);
+      return;
+    }
+
+    // accepted
+    sailAnim(true, shipCloth+' cloth', askWine+' wine');
+    var engGain=(v.engWelf-ENG_AUT), porGain=(v.porWelf-POR_AUT);
+    var res='England: '+v.engC+' cloth + '+v.engWn+' wine → welfare <b>'+v.engWelf.toFixed(1)+'</b> ('
+          +(engGain>=0?'+':'')+engGain.toFixed(1)+' vs alone) &nbsp;·&nbsp; '
+          +'Portugal: '+v.porC+' cloth + '+v.porWn+' wine → welfare '+v.porWelf.toFixed(1)+' (+'+porGain.toFixed(1)+')';
+    if(v.engWelf>=TARGET){
+      won=true;
+      logEnt('⚓ DEAL SIGNED — '+shipCloth+' cloth ⇄ '+askWine+' wine ('+ratio.toFixed(2)+' wine/cloth)',
+        '🇵🇹 "Agreed. A pleasure doing business — we are both richer for it."', res,
+        '🏆 <b>GOLDEN AGE OF TRADE.</b> You specialized completely in cloth, made zero wine, and traded for it instead — reaching a welfare of '+v.engWelf.toFixed(1)+', far past the 14.1 ceiling you faced alone. And because Portugal signed, it won too. <b>That is comparative advantage:</b> the country worse at everything still gained, and nobody lost. This is the harmony Ricardo proved in 1817.', 'win');
+    } else {
+      logEnt('⚓ DEAL SIGNED — '+shipCloth+' cloth ⇄ '+askWine+' wine ('+ratio.toFixed(2)+' wine/cloth)',
+        '🇵🇹 "Agreed — this suits us both."', res,
+        'A real gain from trade — but your welfare is '+v.engWelf.toFixed(1)+', short of the Golden Age (20.0). The biggest prize comes from specializing <b>fully</b> in cloth (all 10 workers at the looms → 40 cloth) and trading about half of it. Try again.', null);
+    }
+    render();
+  }
+
+  function logEnt(hd, porSay, res, final, cls){
+    var log=document.getElementById('log');
+    var d=document.createElement('div'); d.className='ent';
+    d.innerHTML='<div class="hd">'+hd+'</div>'
+      +(porSay?'<div class="por-say">'+porSay+'</div>':'')
+      +(res?'<div class="res">'+res+'</div>':'')
+      +(final?'<div class="final '+(cls||'no')+'">'+final+'</div>':'');
+    log.insertBefore(d, log.firstChild);
+  }
+
+  function reset(){
+    loom=5; shipCloth=0; askWine=0; won=false;
+    document.getElementById('loom').value=5;
+    document.getElementById('shipCloth').value=0;
+    document.getElementById('askWine').value=0;
+    document.getElementById('log').innerHTML='';
+    logEnt('⚓ A new trading year opens',
+      '🇵🇹 Portugal has gone all-in on wine (90 units) — its comparative advantage — and waits to hear your offer.',
+      'You have 10 workers. Decide what England makes, then propose a trade. Beat a welfare of 20 to win — impossible without trade.', null);
+    render();
+  }
+
+  // --- wire up ---
+  document.getElementById('loom').addEventListener('input',function(e){ loom=+e.target.value; render(); });
+  document.getElementById('shipCloth').addEventListener('input',function(e){ shipCloth=+e.target.value; render(); });
+  document.getElementById('askWine').addEventListener('input',function(e){ askWine=+e.target.value; render(); });
+  document.getElementById('send').addEventListener('click', send);
+  document.getElementById('reset').addEventListener('click', reset);
+  reset();
+})();
+</script>
+</body>
+</html>
