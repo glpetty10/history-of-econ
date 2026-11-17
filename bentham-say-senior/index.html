@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bentham, Say &amp; Senior — The Architects of Harmony</title>
+<meta name="description" content="Jeremy Bentham, Jean-Baptiste Say, and Nassau Senior: utility as a measuring rod, Say's Law of markets, and the abstinence theory of profit — the writers who built the case that the market harmonizes our interests. Build 3, History of Economic Thought.">
+<style>
+  :root{
+    --bg:#f3f2ee;
+    --ink:#1b1a22;
+    --muted:#565366;
+    --rule:#d7d3ca;
+    --card:#fffdf9;
+    --accent:#3a3a8c;      /* indigo — the utilitarian / measuring set */
+    --accent-soft:#e7e7f4;
+    --link:#3f3fa0;
+    --brass:#9a6b16;       /* secondary — abstinence / markets */
+    --brass-soft:#f3e8d2;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f0f16; --ink:#e8e7ef; --muted:#9e9bb0; --rule:#2a2938;
+      --card:#17161f; --accent:#9a9af0; --accent-soft:#1d1d33;
+      --link:#a6a6f2; --brass:#e0b45e; --brass-soft:#2d2411;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f0f16; --ink:#e8e7ef; --muted:#9e9bb0; --rule:#2a2938;
+    --card:#17161f; --accent:#9a9af0; --accent-soft:#1d1d33;
+    --link:#a6a6f2; --brass:#e0b45e; --brass-soft:#2d2411;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    line-height:1.65; font-size:19px;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:0 20px}
+  header.masthead{padding:64px 0 40px; border-bottom:1px solid var(--rule)}
+  .kicker{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.14em; font-size:12.5px;
+    color:var(--accent); font-weight:700; margin:0 0 18px;
+  }
+  h1{font-size:40px; line-height:1.12; margin:0 0 10px; font-weight:700; letter-spacing:-0.01em}
+  .dates{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:14px; color:var(--muted); margin:0 0 22px}
+  .bigq{
+    font-style:italic; font-size:21px; color:var(--ink);
+    border-left:3px solid var(--accent); padding:4px 0 4px 18px; margin:22px 0 0;
+  }
+  .bigq span{display:block; font-style:normal; font-size:14px; color:var(--muted); margin-top:8px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  main{padding:8px 0 40px}
+  section{padding:38px 0; border-bottom:1px solid var(--rule)}
+  h2{
+    font-size:13px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.12em; color:var(--accent); font-weight:700;
+    margin:0 0 6px;
+  }
+  h3{font-size:26px; line-height:1.2; margin:0 0 16px; font-weight:700; letter-spacing:-0.01em}
+  p{margin:0 0 18px}
+  a{color:var(--link)}
+  strong{font-weight:700}
+  .lead{font-size:21px}
+  blockquote{
+    margin:26px 0; padding:20px 22px; background:var(--card);
+    border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:4px;
+    font-size:19px;
+  }
+  blockquote p{margin:0 0 8px}
+  blockquote cite{display:block; font-style:normal; font-size:13.5px; color:var(--muted);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+
+  /* the three writers up top */
+  .trio{display:grid; gap:14px; grid-template-columns:1fr; margin:24px 0 6px}
+  @media(min-width:620px){.trio{grid-template-columns:1fr 1fr 1fr}}
+  .who{background:var(--card); border:1px solid var(--rule); border-radius:12px; padding:16px 16px 14px;
+    border-top:3px solid var(--accent)}
+  .who:nth-child(2){border-top-color:var(--brass)}
+  .who:nth-child(3){border-top-color:var(--brass)}
+  .who .nm{font-size:19px; font-weight:700; line-height:1.15}
+  .who .yr{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:12px; color:var(--muted); margin:2px 0 8px}
+  .who .one{font-size:14.5px; color:var(--muted); margin:0}
+  .who .one b{color:var(--ink)}
+
+  .ctable{width:100%; border-collapse:collapse; margin:22px 0; font-size:16px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--card);
+    border:1px solid var(--rule); border-radius:8px; overflow:hidden}
+  .ctable th,.ctable td{padding:11px 13px; border-top:1px solid var(--rule); text-align:left; vertical-align:top}
+  .ctable thead th{background:var(--accent-soft); border-top:0; font-size:12.5px; letter-spacing:.04em}
+  .ctable td:first-child,.ctable th:first-child{font-weight:700; white-space:nowrap}
+  .ctable .hi{color:var(--accent); font-weight:800}
+
+  .cards{display:grid; gap:14px; margin:22px 0}
+  @media(min-width:560px){.cards.two{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card); border:1px solid var(--rule); border-radius:8px; padding:18px 20px}
+  .card h4{margin:0 0 8px; font-size:18px}
+  .card p{margin:0; font-size:16.5px; color:var(--muted)}
+  .card p.body{color:var(--ink)}
+  ul.checks{list-style:none; padding:0; margin:18px 0}
+  ul.checks li{padding:14px 0; border-top:1px solid var(--rule)}
+  ul.checks li:last-child{border-bottom:1px solid var(--rule)}
+  ul.checks b{display:block; font-size:18px}
+  ul.checks span{font-size:16.5px; color:var(--muted)}
+  ol.timeline{list-style:none; padding:0; margin:18px 0}
+  ol.timeline li{display:grid; grid-template-columns:70px 1fr; gap:14px; padding:12px 0; border-top:1px solid var(--rule)}
+  ol.timeline li:last-child{border-bottom:1px solid var(--rule)}
+  ol.timeline .yr{font-weight:700; color:var(--accent);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:15px; padding-top:2px}
+  ol.timeline .ev{font-size:16.5px}
+  .verdict{background:var(--accent-soft); border:1px solid var(--rule); border-radius:8px; padding:22px 24px; margin:22px 0}
+  .verdict p{margin:0; font-size:18.5px}
+  .calc{background:var(--card); border:1px solid var(--rule); border-radius:8px; padding:6px 20px; margin:22px 0}
+  .calc .dim{display:grid; grid-template-columns:140px 1fr; gap:12px; padding:11px 0; border-top:1px solid var(--rule);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:15px}
+  .calc .dim:first-child{border-top:0}
+  .calc .dim b{color:var(--accent)}
+  footer{padding:40px 0 80px; color:var(--muted); font-size:14.5px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  footer a{color:var(--link)}
+  footer h2{margin-bottom:12px}
+  footer ul{margin:0; padding-left:20px}
+  footer li{margin:0 0 8px}
+  .backlink{display:inline-block; margin-top:14px}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">History of Economic Thought · Build 3</p>
+    <h1>Bentham, Say &amp; Senior: the architects of harmony</h1>
+    <p class="dates">Jeremy Bentham 1748–1832 · Jean-Baptiste Say 1767–1832 · Nassau Senior 1790–1864</p>
+    <p class="bigq">Does market exchange harmonize our interests, or conceal a conflict between them?
+      <span>Ricardo left economics split — harmony between nations, open conflict over the harvest at home. These three writers pick up the <strong>harmony</strong> side and build it out. Bentham hands the science a way to <em>measure</em> happiness; Say argues the market can never seize up into a general crisis; Senior insists that profit is a fair <em>reward</em>, not something squeezed out of workers. Together they assemble the intellectual machinery for saying the free market serves everyone — and, our textbook warns, for quietly covering over the conflict Ricardo had exposed.</span>
+    </p>
+    <p style="margin:22px 0 0"><a href="game/" style="display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-weight:700;font-size:15px;padding:12px 22px;border-radius:8px">⚖️ Play the game: The Greatest-Happiness Engine →</a></p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <section>
+    <h2>Three writers, one project</h2>
+    <h3>Who they are, in one line each</h3>
+    <p class="lead">After Ricardo, economics branches. One branch — the labor-and-conflict line — runs toward Marx. The other — the utility-and-harmony line — runs through these three toward modern mainstream economics.</p>
+    <div class="trio">
+      <div class="who">
+        <div class="nm">Jeremy Bentham</div>
+        <div class="yr">1748–1832 · London</div>
+        <p class="one">The philosopher of <b>utility</b>. Morality and law should maximize <b>the greatest happiness of the greatest number</b> — and happiness, he insists, can in principle be <b>counted</b>.</p>
+      </div>
+      <div class="who">
+        <div class="nm">Jean-Baptiste Say</div>
+        <div class="yr">1767–1832 · France</div>
+        <p class="one">The great popularizer of Smith on the Continent, and author of <b>Say's Law</b>: production creates the income to buy what's produced, so a <b>general glut is impossible</b>.</p>
+      </div>
+      <div class="who">
+        <div class="nm">Nassau Senior</div>
+        <div class="yr">1790–1864 · Oxford</div>
+        <p class="one">One of the first professional, academic economists. Profit is the reward for <b>abstinence</b> — the capitalist's sacrifice in <em>not</em> consuming his capital.</p>
+      </div>
+    </div>
+    <p>They never worked as a team, and they disagreed on plenty. What unites them for our purposes is a shared drift: away from Ricardo's grim three-class tug-of-war and toward a picture in which the market, left alone, works <em>for</em> everyone. Our textbook (Hunt &amp; Lautzenheiser) files all three under what it calls the <strong>utility tradition</strong> — and treats Say and Senior, in particular, as increasingly <strong>apologetic</strong>: writers whose main service was defending the emerging industrial order against its critics.</p>
+  </section>
+
+  <section>
+    <h2>Bentham · the measuring rod</h2>
+    <h3>If happiness is the goal, can you count it?</h3>
+    <p>Bentham's starting point is disarmingly simple, and it opens his most famous book:</p>
+    <blockquote>
+      <p>"Nature has placed mankind under the governance of two sovereign masters, pain and pleasure."</p>
+      <cite>— Bentham, <em>Introduction to the Principles of Morals and Legislation</em> (1789), ch. 1</cite>
+    </blockquote>
+    <p>Everything we do, he argues, is aimed at getting pleasure or avoiding pain. So the right action — for a person, and above all for a <em>government</em> — is the one that produces the greatest net balance of pleasure over pain, added up across everyone it touches. This is the <strong>principle of utility</strong>, and its slogan is <strong>"the greatest happiness of the greatest number."</strong></p>
+    <p>The radical move is the next one. Bentham thought happiness was not just the goal but a <strong>quantity</strong> — something you could, in principle, add and subtract like money. His <strong>felicific calculus</strong> (also called the hedonic calculus) lists the dimensions you'd weigh to measure the pleasure or pain from any act:</p>
+    <div class="calc">
+      <div class="dim"><b>Intensity</b><span>How strong is the pleasure or pain?</span></div>
+      <div class="dim"><b>Duration</b><span>How long does it last?</span></div>
+      <div class="dim"><b>Certainty</b><span>How likely is it actually to happen?</span></div>
+      <div class="dim"><b>Propinquity</b><span>How soon will it arrive — now, or far off?</span></div>
+      <div class="dim"><b>Fecundity</b><span>Will it breed <em>more</em> of the same feeling afterward?</span></div>
+      <div class="dim"><b>Purity</b><span>Is it free of a following opposite feeling (pleasure with no hangover)?</span></div>
+      <div class="dim"><b>Extent</b><span>How many people does it reach?</span></div>
+    </div>
+    <p>Notice what this does. It makes every person count equally — the duke's pleasure weighs no more than the beggar's — which made Bentham a genuine radical, a reformer of prisons, law, and the franchise. But it also treats pleasure as pleasure, whatever its source: he was happy to say that a simple game of push-pin, if it gives as much pleasure, is worth as much as poetry. Quantity is what matters, not the dignity of the source.</p>
+    <p>For economics, this is the seed of everything that follows. Once you accept that the goal of society is to maximize total utility, you have a <strong>yardstick</strong>. You can ask whether a tax, a tariff, or a factory raises or lowers the sum of human satisfaction — the exact question behind modern <strong>cost-benefit analysis</strong> and <strong>welfare economics</strong>. And it plants the idea that would detonate sixty years later in the hands of the <strong>marginalists</strong> (Build 6): that value itself comes not from labor, as Ricardo and Marx held, but from <strong>utility</strong> — from how much satisfaction the last little bit of a thing gives you. The game attached to this build puts you inside the calculus: you sit as Bentham's legislator and score real reforms across those seven dimensions.</p>
+  </section>
+
+  <section>
+    <h2>Say · the market that can't seize up</h2>
+    <h3>Say's Law: "products are paid for with products"</h3>
+    <p>Jean-Baptiste Say was the man who carried Adam Smith into French — clearly, enthusiastically, and with a sharper eye than Smith for the <strong>entrepreneur</strong>, the organizer who gathers land, labor, and capital and takes the risk of production. But he is remembered for one claim above all, the one that became classical economics' deepest article of faith.</p>
+    <p>The worry Say set out to answer was this: couldn't an economy simply produce <em>more goods than people want to buy</em> — a glut, with unsold stock piling up and workers idle everywhere at once? Say said no, and here is the logic:</p>
+    <blockquote>
+      <p>"A product is no sooner created than it, from that instant, affords a market for other products to the full extent of its own value."</p>
+      <cite>— Say, <em>A Treatise on Political Economy</em> (1803), bk. I, ch. 15</cite>
+    </blockquote>
+    <p>The point is that <strong>the act of producing something generates exactly the income needed to buy something else</strong>. When a shoemaker makes and sells shoes, the wages, rent, and profit paid out <em>are</em> the demand for other goods — the shoemaker now wants bread, cloth, tools. So supply, in the aggregate, carries its own demand along with it. A glut of one good is always matched by a <em>shortage</em> of another (you made too many shoes because you made too little of what people actually wanted). A <strong>general</strong> glut of everything at once — a demand shortfall across the whole economy — simply can't happen. Keynes would later boil the doctrine down to the famous shorthand <strong>"supply creates its own demand."</strong></p>
+    <p>The implication is enormous and is the heart of why Say belongs on the harmony side: if the market can never suffer a general breakdown, then <strong>mass unemployment and depression are not built into capitalism</strong>. Any slump must be temporary and self-correcting, a mismatch that prices and wages will sort out on their own. There is no systemic flaw for government to fix — and no systemic flaw for a radical to attack.</p>
+    <div class="verdict">
+      <p>This is exactly where <strong>Malthus</strong> (Build 1) broke ranks. Malthus argued that a general glut <em>was</em> possible — that the economy could get stuck with too little demand — and he and Ricardo argued it out for years. Ricardo sided with Say, and Say's Law became orthodoxy for over a century. Then the Great Depression made a general glut impossible to deny, and <strong>Keynes</strong> built his whole <em>General Theory</em> (1936) as a demolition of Say's Law. Say lost that round — but the question of whether markets self-correct is still the fault line in macroeconomics today.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Senior · profit as a fair reward</h2>
+    <h3>Abstinence — and the most famous bad hour in economics</h3>
+    <p>Nassau Senior was something new: a <strong>professional</strong> economist. In 1825 he became the first holder of the Drummond Professorship of Political Economy at Oxford, and he wanted to turn the subject into a rigorous, value-free science built by deduction from a few obvious postulates. Two of his ideas matter for our question — one clever, one disastrous.</p>
+    <p>The clever one is the <strong>abstinence theory of profit</strong>. Ricardo and (soon) Marx treated the capitalist's profit as a <em>deduction</em> — a slice carved out of the value that labor produced, which raised the awkward suggestion that profit was taken <em>from</em> the worker. Senior reframed it completely. Profit, he said, is the reward for <strong>abstinence</strong>: the capitalist could have consumed his wealth, enjoyed it now, but instead he <em>refrained</em>, locking it up as machinery and factories so that production could happen. Interest and profit are the price of that sacrifice, that waiting.</p>
+    <blockquote>
+      <p>"By the word Abstinence, we wish to express that agent, distinct from labour and the agency of nature … the conduct of a person who abstains from the unproductive use of what he can command."</p>
+      <cite>— Senior, <em>An Outline of the Science of Political Economy</em> (1836)</cite>
+    </blockquote>
+    <p>See how neatly this dissolves the conflict. If the worker is paid for labor and the capitalist is paid for abstinence, then each is simply receiving the reward for his own distinct contribution. Nobody is exploiting anybody; the market is handing out fair wages for fair sacrifices. The harmony is restored — by relabeling the thing Ricardo called a deduction as a <em>virtue</em>.</p>
+    <p>The disastrous idea is the <strong>"last hour."</strong> In 1837, fighting the proposed Ten Hours Act that would cap the factory working day, Senior produced an argument that became a byword for motivated reasoning. He claimed that in a textile mill, with its heavy fixed investment, the entire <em>net profit</em> of the business was earned in the <strong>last hour</strong> of the working day — the earlier hours only covered costs. Cut the day from eleven hours to ten, he warned, and you would wipe out profit entirely and destroy the industry.</p>
+    <ul class="checks">
+      <li><b>The claim</b><span>All profit comes from the final hour of labor, so even a one-hour reduction is ruinous. A rhetorical knockout against factory reform.</span></li>
+      <li><b>The error</b><span>Senior bungled the accounting — he ignored that raw materials and circulating capital turn over continuously through the day, not just at the end. Each hour contributes its share of profit.</span></li>
+      <li><b>The afterlife</b><span><strong>Marx</strong> (Build 5) devoted gleeful pages of <em>Capital</em> to shredding "Senior's Last Hour," treating it as proof that the new economics had become a paid advocate for the factory owners.</span></li>
+    </ul>
+    <p>The Ten Hours Act passed in 1847 anyway. The industry did not collapse. But the episode is why Hunt &amp; Lautzenheiser hold Senior up as the clearest case of economics sliding from <em>analysis</em> into <strong>apology</strong> — theory bent to defend the interests of a particular class.</p>
+  </section>
+
+  <section>
+    <h2>The system in one picture</h2>
+    <h3>How the three fit together</h3>
+    <p>Line them up and you can see a single structure being built — a complete answer to the critics who would say the market serves the few at the expense of the many.</p>
+    <table class="ctable">
+      <thead>
+        <tr><th>Writer</th><th>The one big idea</th><th>What it rules out</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Bentham</td><td class="hi">Utility can be measured</td><td>The objection that we can't compare gains and losses across people — gives the market a scorecard it can "win."</td></tr>
+        <tr><td>Say</td><td class="hi">No general gluts</td><td>The objection that capitalism is prone to crisis and mass unemployment — makes slumps self-curing, not systemic.</td></tr>
+        <tr><td>Senior</td><td class="hi">Profit = reward for abstinence</td><td>The objection that profit is taken from the worker — recasts it as fair pay for the capitalist's own sacrifice.</td></tr>
+      </tbody>
+    </table>
+    <p>Bentham supplies the <em>goal and the yardstick</em>; Say promises the <em>machine never breaks</em>; Senior certifies that <em>the shares are fair</em>. Put together, you get a market that maximizes total happiness, runs without crisis, and distributes its rewards justly. That is the harmony answer in its mature form — and it is the target Marx will aim at in Build 5.</p>
+  </section>
+
+  <section>
+    <h2>Where they land on the course question</h2>
+    <h3>Harmony — asserted, and partly to reassure</h3>
+    <p>If Smith saw a natural harmony and Ricardo found a conflict hiding underneath it, these three are the counter-swing: a determined effort to re-establish harmony as the main story.</p>
+    <p><strong>At their best</strong>, they were doing real science. Bentham's utility principle is the foundation of welfare economics and still the moral framework behind every cost-benefit study. Say's question — can demand fall short across a whole economy? — is one of the deepest in all of economics, and the argument is more subtle than its critics allow. Senior's instinct, that waiting and risk-bearing are genuine economic contributions that deserve a return, survives in modern theories of interest.</p>
+    <p><strong>At their worst</strong> — and this is Hunt &amp; Lautzenheiser's charge — the harmony was <em>asserted because it was convenient</em>. Say's Law told the factory system it could do no systemic wrong. Senior's abstinence and his last-hour arithmetic were deployed, in real political fights, to protect profits and resist a shorter working day. The harmony of interests started to look less like a discovery and more like a <strong>comforting story told to the people who were winning</strong>.</p>
+    <div class="verdict">
+      <p>So Build 3's answer to our question is: <strong>harmony — but listen for the motive.</strong> These writers built the serious intellectual case that free markets serve the general good, and much of that case still stands. But they also show economics learning to <em>reassure</em> — to explain conflict away. That is precisely the move Marx will refuse to let them make, and the reason the course now swings back, hard, to the conflict side.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The modern counterpart — and what gets lost</h2>
+    <h3>You use all three without knowing it</h3>
+    <div class="cards two">
+      <div class="card">
+        <h4>What lines up</h4>
+        <p class="body"><strong>Bentham</strong> lives in every cost-benefit analysis and in the whole field of welfare economics. <strong>Say</strong> lives on in the belief — strong among many economists — that the economy tends back to full employment on its own. <strong>Senior</strong>'s abstinence survives in the idea that interest is a reward for deferring consumption (the "time preference" behind every savings rate).</p>
+      </div>
+      <div class="card">
+        <h4>What gets lost</h4>
+        <p class="body">Utility turned out to be far harder to <em>measure</em> and <em>compare between people</em> than Bentham hoped — the whole thing nearly broke welfare economics in the 20th century. Say's Law could not survive the Great Depression. And "abstinence" rings hollow when the person abstaining is a millionaire choosing not to buy a third yacht, while the person laboring is choosing between rent and food.</p>
+      </div>
+    </div>
+    <p>The deepest modern echo is the one that runs through all three: the move from a <strong>labor</strong> theory of value to a <strong>utility</strong> theory of value. Ricardo and Marx said the worth of things comes from the work in them; Bentham's utility, carried forward by Say's and Senior's market optimism, pointed the other way — toward value as <em>subjective satisfaction</em>. That idea wins the argument in the 1870s with the marginalists, and it is still the foundation of the price theory you'd learn in intermediate micro today.</p>
+  </section>
+
+  <section>
+    <h2>The strongest case for them</h2>
+    <h3>Before you file them under "apologists"</h3>
+    <p>It is easy, following our textbook, to read these three as hired defenders of the factory owners — and the last-hour fiasco makes Senior an easy target. But that verdict is too cheap if it's the only one.</p>
+    <p>Bentham was a lifelong <strong>radical</strong>, not a reactionary: he fought for prison reform, animal welfare, the decriminalization of homosexuality, and votes for ordinary people, and his insistence that <em>everyone's</em> happiness counts equally was a weapon against privilege, not for it. Say genuinely believed free markets would lift the poor, and his law — whatever its flaws — forced economists to think hard about where demand actually comes from, a question Keynes could only answer by taking Say seriously enough to refute him in detail. Even Senior's abstinence theory contains a real insight that no serious economist now denies: that <em>someone has to defer consumption</em> for capital to exist, and that deferral is economically costly. The error was not in seeing that waiting matters; it was in pretending that a worker's forced sacrifice and a rich man's chosen one are the same kind of thing. Read them as thinkers wrestling honestly with hard questions — who sometimes let their conclusions be pulled by their sympathies — and they are far more interesting than any cartoon of the "market apologist."</p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>Sources &amp; notes</h2>
+    <ul>
+      <li>Jeremy Bentham, <em>An Introduction to the Principles of Morals and Legislation</em> (1789). The "two sovereign masters" passage and the principle of utility are in ch. 1; the felicific calculus (intensity, duration, certainty, propinquity, fecundity, purity, extent) in ch. 4.</li>
+      <li>Jean-Baptiste Say, <em>A Treatise on Political Economy (Traité d'économie politique)</em> (1803). The law of markets is in bk. I, ch. 15. "Supply creates its own demand" is Keynes's later shorthand, not Say's own wording.</li>
+      <li>Nassau W. Senior, <em>An Outline of the Science of Political Economy</em> (1836) for abstinence; <em>Letters on the Factory Act</em> (1837) for the "last hour" argument.</li>
+      <li>E.K. Hunt &amp; Mark Lautzenheiser, <em>History of Economic Thought: A Critical Perspective</em>, 3rd ed. — course textbook, on the utility tradition and the "apologetic" turn in Say and Senior.</li>
+    </ul>
+    <p style="margin-top:16px">Dates: Bentham 1748–1832; Say 1767–1832; Senior 1790–1864. The Ten Hours Act became law in 1847. Built by Grayson Petty for History of Economic Thought (Dr. Scott Cunningham), Build 3 — Bentham, Say &amp; Senior. Verify all quotations and dates against the primary texts and the textbook before relying on them for a graded quiz or exam.</p>
+    <a class="backlink" href="../">← Back to all builds</a>
+  </div>
+</footer>
+</body>
+</html>

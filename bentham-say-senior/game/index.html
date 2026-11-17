@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Greatest-Happiness Engine — Bentham's Calculus</title>
+<meta name="description" content="A legislative strategy game of Jeremy Bentham's felicific calculus. Pass or veto reforms to maximize the realm's happiness — and discover where 'the greatest happiness' and 'the greatest number' pull apart.">
+<style>
+  :root{
+    --bg:#0c0c16; --panel:#15152a; --panel2:#101023; --ink:#e9e8f5; --muted:#9794b4;
+    --rule:#2a2945; --accent:#8f8ff2; --accent2:#6a6ad8;
+    --good:#5be0a0; --bad:#ff6b7a; --gold:#ffd266; --brass:#e0b45e;
+    --plea:#8f8ff2; --pain:#ff6b7a;
+    --lab:#7fb5ff; --trade:#5be0a0; --merch:#e0b45e; --gentry:#d49cff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(120% 80% at 50% -10%, #1a1a33 0%, var(--bg) 60%);
+    color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5;
+    min-height:100vh}
+  .wrap{max-width:920px;margin:0 auto;padding:0 16px}
+  header{padding:26px 0 12px}
+  .kick{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  h1{font-family:Georgia,serif;font-size:30px;margin:6px 0 2px;letter-spacing:-.01em}
+  h1 .b{color:var(--brass)}
+  .tag{color:var(--muted);font-size:14px;margin:0;max-width:74ch}
+  .tag a{color:var(--accent);text-decoration:none}
+  .tag b{color:var(--ink)}
+
+  /* score meters */
+  .scores{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 8px}
+  @media(min-width:640px){.scores{grid-template-columns:1fr 1fr auto}}
+  .sc{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:13px 15px}
+  .sc .l{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .sc .v{font-family:Georgia,serif;font-size:28px;margin-top:2px;line-height:1}
+  .sc.hap .v{color:var(--accent)}
+  .sc.num .v{color:var(--gold)}
+  .sc .sub{font-size:11px;color:var(--muted);margin-top:4px}
+  .bar{height:7px;border-radius:5px;background:#24243f;overflow:hidden;margin-top:9px}
+  .bar > i{display:block;height:100%;border-radius:5px;transition:width .5s,background .3s}
+  .sessionchip{display:flex;flex-direction:column;justify-content:center;background:linear-gradient(180deg,#191933,#0e0e20);
+    border:1px solid var(--rule);border-radius:12px;padding:13px 18px;text-align:center;min-width:120px}
+  .sessionchip .dd{font-family:Georgia,serif;font-size:19px;font-weight:700}
+  .sessionchip .q{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+
+  /* population strip */
+  .pop{display:flex;height:34px;border-radius:9px;overflow:hidden;border:1px solid var(--rule);margin:4px 0 2px}
+  .pop .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0a0a16;position:relative;overflow:hidden;white-space:nowrap}
+  .pop .seg.lab{background:var(--lab)} .pop .seg.trade{background:var(--trade)}
+  .pop .seg.merch{background:var(--merch)} .pop .seg.gentry{background:var(--gentry)}
+  .popnote{font-size:11px;color:var(--muted);margin:6px 2px 2px;letter-spacing:.03em}
+
+  /* reform card */
+  .reform{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--rule);
+    border-radius:14px;padding:18px 18px 16px;margin:14px 0}
+  .reform .rno{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .reform h2{font-family:Georgia,serif;font-size:23px;margin:4px 0 6px;letter-spacing:-.01em}
+  .reform .blurb{font-size:15px;color:var(--ink);margin:0 0 6px}
+  .reform .teaches{font-size:12.5px;color:var(--brass);font-weight:700;margin:0 0 14px}
+  .reform .teaches::before{content:"⚖ ";}
+
+  /* effects breakdown */
+  .eff{display:grid;grid-template-columns:1fr;gap:9px}
+  @media(min-width:620px){.eff{grid-template-columns:1fr 1fr}}
+  .row{display:flex;gap:11px;align-items:flex-start;background:#13132700;border:1px solid var(--rule);border-radius:10px;padding:10px 12px}
+  .row .grp{flex:none;width:92px}
+  .row .gname{font-size:12.5px;font-weight:700;line-height:1.2}
+  .row .gsize{font-size:10.5px;color:var(--muted)}
+  .row .meat{flex:1;min-width:0}
+  .row .uu{font-family:Georgia,serif;font-size:17px;font-weight:700}
+  .row .uu.plus{color:var(--plea)} .row .uu.minus{color:var(--pain)} .row .uu.zero{color:var(--muted)}
+  .row .why{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.35}
+  .dotg{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
+  .dotg.lab{background:var(--lab)} .dotg.trade{background:var(--trade)}
+  .dotg.merch{background:var(--merch)} .dotg.gentry{background:var(--gentry)}
+
+  .ledger{display:flex;flex-wrap:wrap;gap:8px 16px;margin:14px 0 2px;font-size:13px;color:var(--muted)}
+  .ledger b{font-family:Georgia,serif;font-size:16px}
+  .ledger .lp{color:var(--accent)} .ledger .ln{color:var(--gold)}
+
+  .actions{display:flex;gap:10px;margin:16px 0 2px;flex-wrap:wrap}
+  .btn{font:inherit;font-weight:800;font-size:14.5px;padding:12px 22px;border-radius:10px;border:1px solid var(--rule);
+    background:transparent;color:var(--muted);cursor:pointer}
+  .btn.pass{border-color:var(--good);color:#06130c;background:var(--good)}
+  .btn.veto{border-color:var(--bad);color:var(--bad)}
+  .btn.pass:hover{filter:brightness(1.08)} .btn.veto:hover{background:rgba(255,107,122,.12)}
+  .btn.ghost{color:var(--muted)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+
+  /* log */
+  .log{background:var(--panel2);border:1px solid var(--rule);border-radius:12px;padding:4px 14px;max-height:340px;overflow:auto;margin-top:14px}
+  .ent{padding:12px 0;border-top:1px solid var(--rule);font-size:14px}
+  .ent:first-child{border-top:0}
+  .ent .hd{font-family:Menlo,monospace;font-size:11.5px;color:var(--gold);letter-spacing:.02em}
+  .ent .ver{margin-top:4px}
+  .ent .ver.agree{color:var(--good)} .ent .ver.diff{color:var(--bad)}
+  .ent .les{color:var(--muted);font-size:12.5px;margin-top:4px}
+  .ent .final{border-radius:8px;padding:13px;margin-top:7px;font-size:14.5px}
+  .ent .final.win{background:linear-gradient(90deg,rgba(91,224,160,.16),transparent)}
+  .ent .final.mid{background:linear-gradient(90deg,rgba(143,143,242,.16),transparent)}
+  .ent .final.lose{background:linear-gradient(90deg,rgba(255,107,122,.15),transparent)}
+
+  details.map{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:2px 16px;margin:18px 0}
+  details.map summary{cursor:pointer;font-weight:700;padding:12px 0;font-size:14px;color:var(--accent)}
+  details.map table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+  details.map td{padding:7px 8px;border-top:1px solid var(--rule);vertical-align:top}
+  details.map td:first-child{white-space:nowrap;font-weight:700}
+  footer{padding:14px 0 60px;color:var(--muted);font-size:12.5px}
+  footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <p class="kick">History of Economic Thought · Build 3 · playable</p>
+    <h1>The Greatest-Happiness <span class="b">Engine</span></h1>
+    <p class="tag">⚖️ You are <b>Jeremy Bentham's legislator</b>. Reforms land on your desk; the Engine scores each one through the <b>felicific calculus</b>. Pass the acts that raise the realm's happiness, veto the ones that lower it — and find out where <b>"the greatest happiness"</b> and <b>"the greatest number"</b> stop agreeing. &nbsp;·&nbsp; <a href="../">Read the explainer →</a></p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- SCORES -->
+  <div class="scores">
+    <div class="sc hap">
+      <div class="l">⚖️ Greatest Happiness</div>
+      <div class="v" id="hapV">0</div>
+      <div class="sub">total utils across all 1,000 souls · <span id="hapTarget">reach 15,000</span></div>
+      <div class="bar"><i id="hapBar" style="width:0%;background:var(--accent)"></i></div>
+    </div>
+    <div class="sc num">
+      <div class="l">👥 The Greatest Number</div>
+      <div class="v" id="numV">0</div>
+      <div class="sub">net people pleased vs pained by what you passed</div>
+      <div class="bar"><i id="numBar" style="width:0%;background:var(--gold)"></i></div>
+    </div>
+    <div class="sessionchip">
+      <div class="dd" id="sess">Bill 1</div>
+      <div class="q" id="sessN">of 9</div>
+    </div>
+  </div>
+
+  <!-- POPULATION -->
+  <div class="pop">
+    <div class="seg lab" style="width:62%">620 Labourers</div>
+    <div class="seg trade" style="width:25%">250 Trades</div>
+    <div class="seg merch" style="width:9%">90</div>
+    <div class="seg gentry" style="width:4%">40</div>
+  </div>
+  <div class="popnote">Each group's headcount is its <b>extent</b> — the 7th dimension of the calculus. A pleasure felt by 620 labourers outweighs the same pleasure felt by 40 lords, unless the lords feel it far more intensely.</div>
+
+  <!-- REFORM CARD -->
+  <div class="reform" id="reform"><!-- filled by JS --></div>
+
+  <div class="actions" id="actions">
+    <button class="btn pass" id="pass">✅ Pass it into law</button>
+    <button class="btn veto" id="veto">⛔ Veto</button>
+    <button class="btn ghost" id="reset" style="margin-left:auto">↺ New session</button>
+  </div>
+
+  <!-- LOG -->
+  <div class="log" id="log"></div>
+
+  <!-- MAP -->
+  <details class="map">
+    <summary>What each piece really means (say this in your breakout room)</summary>
+    <table>
+      <tr><td>The Engine</td><td>Bentham's <b>felicific (hedonic) calculus</b>: the claim that pleasure and pain can be <em>measured</em> and summed. Every reform's score is a sum of pleasures minus pains across the realm.</td></tr>
+      <tr><td>The seven dimensions</td><td><b>Intensity</b> (how strong), <b>duration</b> (how long), <b>certainty</b> (how likely), <b>propinquity</b> (how soon), <b>fecundity</b> (does it breed more pleasure), <b>purity</b> (is it free of following pain), and <b>extent</b> (how many people). Each card's "why" lines tell you which ones moved the number.</td></tr>
+      <tr><td>Greatest Happiness</td><td>The <b>total</b> utils — the whole realm's net pleasure. Bentham's goal was to maximize this sum.</td></tr>
+      <tr><td>The Greatest Number</td><td>Whether <b>more people</b> were helped than hurt. Bentham's slogan welds the two together — but they can pull apart, and that is the game's real lesson.</td></tr>
+      <tr><td>The monopoly bill</td><td>The trap. It can raise the <em>total</em> (a few merchants gain enormously) while wrecking the <em>number</em> (the many pay a little more). "Sacrifice the many for a bigger total?" is utilitarianism's most famous objection — you'll feel it directly.</td></tr>
+      <tr><td>Certainty &amp; the factory act</td><td>A nod to <b>Nassau Senior</b>: the mill-owners' threatened ruin is <em>uncertain and overstated</em> (his "last hour" error), so the calculus discounts that claimed pain.</td></tr>
+      <tr><td>Purity &amp; the gin bill</td><td>A pleasure that looks huge but is followed by its opposite — ruin, the hangover — scores low on <b>purity</b> and <b>fecundity</b>, so a tempting "+" turns negative.</td></tr>
+    </table>
+  </details>
+
+</main>
+
+<footer class="wrap">
+  A learning model of Jeremy Bentham's felicific calculus (<em>Principles of Morals and Legislation</em>, 1789), with nods to Say's markets and Senior's factory arguments. The reforms and numbers are illustrative, not historical vote tallies — the calculus and its famous tension are the real point.
+  &nbsp;·&nbsp; <a href="../">Explainer</a> · <a href="../../">All builds</a>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var GROUPS = {
+    lab:    { name:"Labourers",        size:620, cls:"lab" },
+    trade:  { name:"Tradesmen",        size:250, cls:"trade" },
+    merch:  { name:"Merchants",        size:90,  cls:"merch" },
+    gentry: { name:"Gentry",           size:40,  cls:"gentry" }
+  };
+
+  // Each reform: effects = [{g, u (util per person), why (names a calculus dimension)}]
+  // u already nets the calculus (e.g. a gross pleasure cut down by poor purity/certainty).
+  var DECK = [
+    { id:"school", title:"Free schooling for the poor", teaches:"Duration + Fecundity: a lasting pleasure that breeds more good",
+      blurb:"Parish schools, paid from a small property tax, open to every child.",
+      effects:[
+        {g:"lab",   u:6, why:"Lasting (high duration) and fecund — learning breeds further pleasure for generations."},
+        {g:"trade", u:5, why:"Skilled, literate apprentices; durable benefit."},
+        {g:"merch", u:1, why:"A more capable workforce, mildly."},
+        {g:"gentry",u:-2,why:"The property tax — a small, certain present pain."}
+      ],
+      lesson:"High duration × high fecundity is exactly what Bentham prized: a modest pleasure that keeps paying out. Pass."},
+
+    { id:"bread", title:"Repeal the tax on bread", teaches:"Extent: a small pleasure, but felt by almost everyone",
+      blurb:"Scrap the duty that keeps the price of grain high (Ricardo's old fight).",
+      effects:[
+        {g:"lab",   u:5, why:"Cheaper bread, every single day — modest intensity, vast extent."},
+        {g:"trade", u:4, why:"Cheaper food and more customers with money to spend."},
+        {g:"merch", u:3, why:"Workers cost less to feed; trade quickens."},
+        {g:"gentry",u:-8,why:"Landlords lose their rent premium — an intense, lasting pain for the few."}
+      ],
+      lesson:"The landlords howl (−8 each), but there are only 40 of them. Extent carries the day: 960 people gain. Pass."},
+
+    { id:"debtors", title:"Abolish debtors' prison", teaches:"Intensity: a searing pain for a few outweighs its small headcount",
+      blurb:"No more jailing people who cannot pay — a cause Bentham fought for in life.",
+      effects:[
+        {g:"lab",   u:3, why:"Intense relief for the unlucky, plus security for all who fear the debt-trap."},
+        {g:"trade", u:2, why:"Small traders no longer ruined by one bad season."},
+        {g:"merch", u:-1,why:"Lose a brutal tool for collecting debts."},
+        {g:"gentry",u:0, why:"Barely touched."}
+      ],
+      lesson:"The pleasure per head looks small, but the intensity of escaping ruin is real and the pain removed is severe. Pass."},
+
+    { id:"panopticon", title:"Build the Panopticon workhouse", teaches:"Purity + Extent: even Bentham's pet scheme must face his own calculus",
+      blurb:"Bentham's own design: a workhouse where every inmate can always be watched.",
+      effects:[
+        {g:"lab",   u:-2,why:"Constant surveillance is an impure pleasure at best — relief mixed with dread, felt by the many."},
+        {g:"trade", u:1, why:"Lower poor-rates, mildly."},
+        {g:"merch", u:2, why:"Cheaper, more disciplined labour."},
+        {g:"gentry",u:2, why:"Lower poor-rates, and order kept."}
+      ],
+      lesson:"Bentham loved this scheme — but run it through his own Engine and the 620 labourers' loss (low purity, huge extent) sinks it. Veto. Theory can embarrass its author."},
+
+    { id:"gin", title:"Sell cheap gin licences", teaches:"Purity + Fecundity: the pleasure that is followed by its opposite",
+      blurb:"A gin-shop on every corner — instant takings for the Treasury and the publicans.",
+      effects:[
+        {g:"lab",   u:-1,why:"The glass is intense now, but IMPURE — followed by sickness, debt, ruin. Negative fecundity drags it below zero."},
+        {g:"trade", u:0, why:"A wash — some custom, some drunk workers."},
+        {g:"merch", u:4, why:"Publicans and distillers profit handsomely."},
+        {g:"gentry",u:-1,why:"Disorder on their lands."}
+      ],
+      lesson:"The headline pleasure is huge — but purity and fecundity are where it dies: a joy chased by its own hangover scores negative. Veto the trap."},
+
+    { id:"monopoly", title:"Sell a trade monopoly to the merchants", teaches:"THE crux — Greatest Happiness vs. the Greatest NUMBER",
+      blurb:"An exclusive charter: 90 merchants get sole right to a lucrative trade, and the Crown gets a fat fee.",
+      effects:[
+        {g:"merch", u:60,why:"An ENORMOUS, lasting gain — but concentrated in just 90 people."},
+        {g:"lab",   u:-4,why:"Higher prices, no competition — a small pain, spread over 620."},
+        {g:"trade", u:-4,why:"Shut out of the trade — a small pain over 250."},
+        {g:"gentry",u:2, why:"A cut of the charter fee."}
+      ],
+      lesson:"Here is utilitarianism's sharpest knife: the TOTAL utils come out POSITIVE (90 × 60 beats the scattered losses), yet 870 people are made worse off and only 130 better. 'Greatest happiness' says maybe; 'greatest NUMBER' says never. Veto to serve the number."},
+
+    { id:"tenhours", title:"The Ten-Hours Factory Act", teaches:"Certainty: discount a pain that is loudly claimed but unlikely",
+      blurb:"Cap the mill day at ten hours. The owners cry that it will destroy them — Senior's famous 'last hour' argument.",
+      effects:[
+        {g:"lab",   u:7, why:"Health, rest, family — intense, lasting, fecund pleasure for the many."},
+        {g:"trade", u:1, why:"Steadier, healthier workers."},
+        {g:"merch", u:-3,why:"Owners claim RUIN (−12), but that pain is UNCERTAIN and overstated (Senior's error) — the Engine discounts it to −3."},
+        {g:"gentry",u:0, why:"Unaffected."}
+      ],
+      lesson:"Senior swore all profit lived in the last hour, so cutting it would be fatal. It wasn't — his arithmetic was wrong. Certainty matters: a dubious claimed pain is worth little. Pass."},
+
+    { id:"warloan", title:"A lottery loan to fund a foreign war", teaches:"Propinquity + Certainty: present sure pain vs. distant doubtful glory",
+      blurb:"Borrow heavily against a lottery to pay for a war across the sea.",
+      effects:[
+        {g:"lab",   u:-3,why:"Taxes now — a certain, present (high-propinquity) pain."},
+        {g:"trade", u:-3,why:"Certain present pain, paid in taxes."},
+        {g:"merch", u:1, why:"War contracts — but distant and uncertain, so heavily discounted."},
+        {g:"gentry",u:1, why:"Glory and contracts, equally remote and doubtful."}
+      ],
+      lesson:"Present certain pain beats distant uncertain pleasure every time in the calculus. Veto."},
+
+    { id:"relief", title:"Double the parish poor-relief", teaches:"Propinquity high, Fecundity low — a real Bentham dilemma",
+      blurb:"Generous cash relief, handed out now, to everyone below the bread-line.",
+      effects:[
+        {g:"lab",   u:4, why:"Immediate (high propinquity), intense relief for the hungry — the many."},
+        {g:"trade", u:-1,why:"Higher poor-rates."},
+        {g:"merch", u:-2,why:"Higher poor-rates; Senior & Malthus warn of long-run dependency (low fecundity)."},
+        {g:"gentry",u:-2,why:"Higher poor-rates."}
+      ],
+      lesson:"The immediacy is a genuine pleasure to 620 people and the total stays positive — so pass, but notice the low-fecundity warning Malthus and Senior kept raising. A close call."}
+  ];
+
+  var HAP_TARGET = 15000, NUM_TARGET = 3000;
+
+  var state;
+
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+  function reformTotal(r){ var t=0; r.effects.forEach(function(e){ t += GROUPS[e.g].size * e.u; }); return t; }
+  function reformNumber(r){ var pl=0,pn=0; r.effects.forEach(function(e){ if(e.u>0)pl+=GROUPS[e.g].size; else if(e.u<0)pn+=GROUPS[e.g].size; }); return {pleased:pl, pained:pn, net:pl-pn}; }
+
+  function reset(){
+    state = { order:shuffle(DECK), i:0, hap:0, num:0, passedMonopoly:false, over:false };
+    document.getElementById('log').innerHTML='';
+    document.getElementById('hapTarget').textContent='reach '+HAP_TARGET.toLocaleString();
+    logEnt('⚖️ The session opens',
+      'Nine bills await your judgment. The Engine will show you each one\'s pleasures and pains — you decide which become law.',
+      'Goal: push Greatest Happiness past '+HAP_TARGET.toLocaleString()+' utils AND keep the Greatest Number firmly positive. Both, not either.', null,null);
+    render();
+  }
+
+  function clampPct(x){ return Math.max(0,Math.min(100,x)); }
+
+  function render(){
+    document.getElementById('hapV').textContent = Math.round(state.hap).toLocaleString();
+    document.getElementById('numV').textContent = (state.num>=0?'+':'')+Math.round(state.num).toLocaleString();
+    document.getElementById('hapBar').style.width = clampPct(state.hap/HAP_TARGET*100)+'%';
+    document.getElementById('hapBar').style.background = state.hap>=HAP_TARGET?'var(--good)':'var(--accent)';
+    var numPct = clampPct((state.num/ (NUM_TARGET) )*100);
+    document.getElementById('numBar').style.width = numPct+'%';
+    document.getElementById('numBar').style.background = state.num>=NUM_TARGET?'var(--good)':(state.num>=0?'var(--gold)':'var(--bad)');
+
+    var reformEl = document.getElementById('reform');
+    var actions = document.getElementById('actions');
+
+    if(state.over || state.i>=state.order.length){
+      reformEl.innerHTML = '<div class="rno">Session closed</div><h2>The legislative year is over.</h2><p class="blurb">Read the Engine\'s final verdict in the ledger below, then start a new session to try a different set of judgments.</p>';
+      document.getElementById('pass').disabled=true;
+      document.getElementById('veto').disabled=true;
+      document.getElementById('sess').textContent='Final';
+      document.getElementById('sessN').textContent='';
+      return;
+    }
+
+    document.getElementById('pass').disabled=false;
+    document.getElementById('veto').disabled=false;
+    document.getElementById('sess').textContent='Bill '+(state.i+1);
+    document.getElementById('sessN').textContent='of '+state.order.length;
+
+    var r = state.order[state.i];
+    var rows = r.effects.map(function(e){
+      var g = GROUPS[e.g];
+      var sign = e.u>0?'plus':(e.u<0?'minus':'zero');
+      var utxt = (e.u>0?'+':'')+e.u+' / head';
+      return '<div class="row">'+
+        '<div class="grp"><div class="gname"><span class="dotg '+g.cls+'"></span>'+g.name+'</div><div class="gsize">'+g.size+' souls</div></div>'+
+        '<div class="meat"><div class="uu '+sign+'">'+utxt+'</div><div class="why">'+e.why+'</div></div>'+
+      '</div>';
+    }).join('');
+
+    var tot=reformTotal(r), nn=reformNumber(r);
+    reformEl.innerHTML =
+      '<div class="rno">Bill '+(state.i+1)+' on the desk</div>'+
+      '<h2>'+r.title+'</h2>'+
+      '<p class="blurb">'+r.blurb+'</p>'+
+      '<p class="teaches">'+r.teaches+'</p>'+
+      '<div class="eff">'+rows+'</div>'+
+      '<div class="ledger">'+
+        '<span>If passed → Happiness <b class="lp">'+(tot>=0?'+':'')+tot.toLocaleString()+'</b> utils</span>'+
+        '<span>People pleased <b class="lp">'+nn.pleased+'</b> · pained <b class="ln">'+nn.pained+'</b> → number <b>'+(nn.net>=0?'+':'')+nn.net+'</b></span>'+
+      '</div>';
+  }
+
+  function decide(pass){
+    if(state.over || state.i>=state.order.length) return;
+    var r = state.order[state.i];
+    var tot=reformTotal(r), nn=reformNumber(r);
+    // "Correct" Benthamite move: pass if it raises total AND doesn't savage the number.
+    var engineSaysPass = (tot>0 && nn.net>0);
+    // monopoly is the special case: positive total, negative number
+    var isMonopoly = (r.id==='monopoly');
+
+    if(pass){
+      state.hap += tot;
+      state.num += nn.net;
+      if(isMonopoly) state.passedMonopoly=true;
+    }
+
+    var agree = (pass===engineSaysPass);
+    var verClass = agree?'agree':'diff';
+    var totStr = (tot>=0?'+':'')+tot.toLocaleString();
+    var verText;
+    if(pass){
+      verText = 'Passed. Happiness '+totStr+' utils; the number moved '+(nn.net>=0?'+':'')+nn.net+
+                ' ('+nn.pleased+' pleased, '+nn.pained+' pained).';
+    } else {
+      verText = (tot<0)
+        ? 'Vetoed — and well avoided: that bill would have cost '+totStr+' utils.'
+        : 'Vetoed. You pass up '+totStr+' utils of happiness.';
+    }
+
+    logEnt('Bill '+(state.i+1)+': '+r.title+' — '+(pass?'PASSED':'VETOED'),
+      verText, r.lesson, null, null, verClass);
+
+    state.i++;
+    if(state.i>=state.order.length){ finish(); }
+    render();
+  }
+
+  function finish(){
+    state.over=true;
+    var hap=state.hap, num=state.num;
+    var cls, msg;
+    if(state.passedMonopoly){
+      cls='mid';
+      msg='🪙 <b>The Utility Monster wins.</b> You signed the monopoly: your Greatest-Happiness total climbed (a handful of merchants gained enormously), but you did it by making <b>870 people a little worse off to make 90 people a lot better off</b>. That is the single most famous objection to Bentham\'s whole project — that a big enough concentrated gain can, on the arithmetic, "justify" sacrificing the many. Bentham\'s own slogan, "the greatest happiness of the greatest <em>number</em>," was his attempt to forbid exactly this. The tension never fully resolves — which is why we are still arguing about it.';
+    } else if(hap>=HAP_TARGET && num>=NUM_TARGET){
+      cls='win';
+      msg='🏆 <b>A true Benthamite session.</b> Happiness at '+Math.round(hap).toLocaleString()+' utils AND the greatest number firmly served ('+(num>=0?'+':'')+Math.round(num).toLocaleString()+'). You passed the lasting, fecund, wide-reaching goods (schooling, cheap bread, the factory act), saw through the impure trap (gin) and the uncertain threat (Senior\'s "ruin"), and refused to buy a big total by selling out the many. This is utilitarianism at its best: every person counted once, nobody counted for more.';
+    } else if(hap>=10000 && num>=NUM_TARGET){
+      cls='win';
+      msg='👍 <b>A solid, humane session.</b> The greatest number is well served ('+(num>=0?'+':'')+Math.round(num).toLocaleString()+'), and happiness reached '+Math.round(hap).toLocaleString()+'. You vetoed one or two reforms that would actually have helped — a cautious legislator leaves some utility on the table. But you never sacrificed the many, and that is the harder half to get right.';
+    } else if(num<0){
+      cls='lose';
+      msg='⚖️ <b>The many were ill-served.</b> Your Greatest Number came out negative ('+Math.round(num).toLocaleString()+') — across the bills you passed, more people were pained than pleased. A legislator can chase a big total and still fail the second, harder test built into Bentham\'s own slogan. Start again and weigh <em>extent</em> more heavily: a small pleasure felt by 620 beats a large one felt by 40.';
+    } else {
+      cls='mid';
+      msg='🤔 <b>Too timid.</b> You protected the number, but Happiness finished at only '+Math.round(hap).toLocaleString()+' — short of the '+HAP_TARGET.toLocaleString()+' target. You vetoed reforms that were genuinely good on the calculus (high duration, high extent, discounted uncertain pains). Utilitarianism asks you to <em>act</em> when the sums are positive, not just to avoid harm. Try again and pass the lasting, wide-reaching goods.';
+    }
+    logEnt('⚖️ THE SESSION IS CLOSED', 'Greatest Happiness: '+Math.round(hap).toLocaleString()+' utils · Greatest Number: '+(num>=0?'+':'')+Math.round(num).toLocaleString(),
+      '', msg, cls);
+  }
+
+  function logEnt(hd, ver, les, finalHtml, cls2, verClass){
+    var log=document.getElementById('log');
+    var d=document.createElement('div'); d.className='ent';
+    d.innerHTML='<div class="hd">'+hd+'</div>'
+      +(ver?'<div class="ver '+(verClass||'')+'">'+ver+'</div>':'')
+      +(les?'<div class="les">'+les+'</div>':'')
+      +(finalHtml?'<div class="final '+(cls2||'')+'">'+finalHtml+'</div>':'');
+    log.insertBefore(d, log.firstChild);
+  }
+
+  document.getElementById('pass').addEventListener('click', function(){ decide(true); });
+  document.getElementById('veto').addEventListener('click', function(){ decide(false); });
+  document.getElementById('reset').addEventListener('click', reset);
+  reset();
+})();
+</script>
+</body>
+</html>
